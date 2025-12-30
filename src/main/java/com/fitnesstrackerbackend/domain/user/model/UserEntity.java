@@ -50,4 +50,7 @@ public class UserEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private AdminInfoEntity adminInfo;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private LoginCredentialEntity loginCredential;
 }

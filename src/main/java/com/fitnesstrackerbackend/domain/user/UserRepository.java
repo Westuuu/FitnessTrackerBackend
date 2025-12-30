@@ -18,4 +18,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             "LEFT JOIN FETCH u.adminInfo " +
             "WHERE u.id = :id")
     Optional<UserEntity> findByIdWithAllDetails(@Param("id") Long id);
+
+    boolean existsByLoginCredentialEmail(String loginCredentialEmail);
+
 }

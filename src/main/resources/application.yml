@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: FitnessTrackerBackend
+
+  datasource:
+    admin:
+      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+      username: ${POSTGRES_USER_ADMIN:${POSTGRES_USER}}
+      password: ${POSTGRES_PASSWORD_ADMIN:${POSTGRES_PASSWORD}}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        pool-name: AdminPool
+        minimum-idle: 1
+        maximum-pool-size: 5
+
+    trainer:
+      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+      username: ${POSTGRES_USER_TRAINER:${POSTGRES_USER}}
+      password: ${POSTGRES_PASSWORD_TRAINER:${POSTGRES_PASSWORD}}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        pool-name: TrainerPool
+        minimum-idle: 2
+        maximum-pool-size: 10
+
+    trainee:
+      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+      username: ${POSTGRES_USER_TRAINEE:${POSTGRES_USER}}
+      password: ${POSTGRES_PASSWORD_TRAINEE:${POSTGRES_PASSWORD}}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        pool-name: TraineePool
+        minimum-idle: 5
+        maximum-pool-size: 20
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:80}
+    allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
+    allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Content-Type}

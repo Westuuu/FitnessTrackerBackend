@@ -1,4 +1,4 @@
-package com.fitnesstrackerbackend.domain.user.dto;
+package com.fitnesstrackerbackend.domain.auth.dto;
 
 import com.fitnesstrackerbackend.domain.user.model.Sex;
 import com.fitnesstrackerbackend.domain.user.model.UserType;
@@ -6,7 +6,6 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Data

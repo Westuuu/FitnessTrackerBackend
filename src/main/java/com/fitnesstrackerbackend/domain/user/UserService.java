@@ -2,11 +2,14 @@ package com.fitnesstrackerbackend.domain.user;
 
 import com.fitnesstrackerbackend.core.exception.ResourceNotFoundException;
 import com.fitnesstrackerbackend.domain.user.dto.UserProfileDto;
-import com.fitnesstrackerbackend.domain.user.dto.UserRegistrationDto;
+import com.fitnesstrackerbackend.domain.auth.dto.UserRegistrationDto;
+import com.fitnesstrackerbackend.domain.auth.exception.UserAlreadyExistsException;
+import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -46,10 +49,5 @@ public class UserService {
                         .isAdminActive(info.getIsActive()));
 
         return builder.build();
-    }
-
-    @Transactional
-    public UserProfileDto registerUser(@Valid UserRegistrationDto registrationDto) {
-        if (userRepository.existsByLoginCredentialEmail(registrationDto.getEmail()))
     }
 }

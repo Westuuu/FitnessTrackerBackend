@@ -1,7 +1,7 @@
 package com.fitnesstrackerbackend.domain.user;
 
 import com.fitnesstrackerbackend.domain.user.dto.UserProfileDto;
-import com.fitnesstrackerbackend.domain.user.dto.UserRegistrationDto;
+import com.fitnesstrackerbackend.domain.auth.dto.UserRegistrationDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +22,5 @@ public class UserController {
     @GetMapping("/{userID}")
     public ResponseEntity<UserProfileDto> getUserProfile(@PathVariable Long userID) {
         return ResponseEntity.ok(userService.getUserProfile(userID));
-    }
-
-    @PostMapping
-    public ResponseEntity<UserProfileDto> registerUser(@RequestBody @Valid UserRegistrationDto registrationDto) {
-
-        UserProfileDto createdUser = userService.registerUser(registrationDto);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{userID}")
-                .buildAndExpand(createdUser.getId())
-                .toUri();
-
-        return ResponseEntity
-                .created(location)
-                .body(createdUser);
     }
 }

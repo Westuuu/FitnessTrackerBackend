@@ -1,5 +1,6 @@
-package com.fitnesstrackerbackend.domain.user.model;
+package com.fitnesstrackerbackend.domain.auth.model;
 
+import com.fitnesstrackerbackend.domain.user.model.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

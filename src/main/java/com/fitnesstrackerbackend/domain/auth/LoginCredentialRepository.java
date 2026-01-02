@@ -1,6 +1,6 @@
-package com.fitnesstrackerbackend.domain.user;
+package com.fitnesstrackerbackend.domain.auth;
 
-import com.fitnesstrackerbackend.domain.user.model.LoginCredentialEntity;
+import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

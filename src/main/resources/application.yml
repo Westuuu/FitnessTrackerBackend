@@ -40,11 +40,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  jwt:
-    secret: ${JWT_SECRET}
-    expiration: ${JWT_EXPIRATION}
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
-  cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:80}
-    allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
-    allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Content-Type}
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:80}
+  allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
+  allowed-headers: ${CORS_ALLOWED_HEADERS:Authorization,Content-Type}

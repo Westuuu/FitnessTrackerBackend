@@ -1,4 +1,4 @@
-package com.fitnesstrackerbackend.domain.user.exception;
+package com.fitnesstrackerbackend.domain.auth.exception;
 
 import com.fitnesstrackerbackend.core.exception.BusinessLogicException;
 

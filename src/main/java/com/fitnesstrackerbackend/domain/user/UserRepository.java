@@ -21,4 +21,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     boolean existsByLoginCredentialEmail(String loginCredentialEmail);
 
+    @Query("SELECT u FROM UserEntity u " +
+            "JOIN FETCH u.loginCredential lc " +
+            "WHERE lc.email = :email")
+    Optional<UserEntity> findByLoginCredentialEmail(String loginCredentialEmail);
 }

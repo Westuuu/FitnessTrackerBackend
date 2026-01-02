@@ -1,6 +1,7 @@
 package com.fitnesstrackerbackend.domain.user.model;
 
 
+import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -3,6 +3,7 @@ package com.fitnesstrackerbackend.core.security;
 import com.fitnesstrackerbackend.domain.user.UserRepository;
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,7 @@ public class AppUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByLoginCredentialEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 

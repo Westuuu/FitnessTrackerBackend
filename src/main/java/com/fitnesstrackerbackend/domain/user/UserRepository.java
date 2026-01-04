@@ -24,5 +24,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM UserEntity u " +
             "JOIN FETCH u.loginCredential lc " +
             "WHERE lc.email = :email")
-    Optional<UserEntity> findByLoginCredentialEmail(String loginCredentialEmail);
+    Optional<UserEntity> findByLoginCredentialEmail(String email);
 }

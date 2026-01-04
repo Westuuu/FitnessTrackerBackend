@@ -31,13 +31,11 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final DatabaseRoutingFilter databaseRoutingFilter;
     private final UserDetailsService appUserDetailsService;
-    @Qualifier("handlerExceptionResolver")
     private final HandlerExceptionResolver exceptionResolver;
 
     @Value("${cors.allowed-origins}")
@@ -48,6 +46,18 @@ public class SecurityConfig {
 
     @Value("${cors.allowed-headers}")
     private List<String> allowedHeaders;
+
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            DatabaseRoutingFilter databaseRoutingFilter,
+            UserDetailsService appUserDetailsService,
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver
+    ) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.databaseRoutingFilter = databaseRoutingFilter;
+        this.appUserDetailsService = appUserDetailsService;
+        this.exceptionResolver = exceptionResolver;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) {
@@ -73,6 +83,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+//                        .requestMatchers("/api/gym/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated()
                 )

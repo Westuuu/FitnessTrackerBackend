@@ -1,11 +1,14 @@
 package com.fitnesstrackerbackend.domain.auth;
 
+import com.fitnesstrackerbackend.core.exception.ResourceNotFoundException;
 import com.fitnesstrackerbackend.core.security.JwtService;
 import com.fitnesstrackerbackend.domain.auth.dto.LoginRequestDto;
 import com.fitnesstrackerbackend.domain.auth.dto.LoginResponseDto;
 import com.fitnesstrackerbackend.domain.auth.dto.UserRegistrationDto;
 import com.fitnesstrackerbackend.domain.auth.exception.UserAlreadyExistsException;
 import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
+import com.fitnesstrackerbackend.domain.gym.GymRepository;
+import com.fitnesstrackerbackend.domain.gym.model.GymEntity;
 import com.fitnesstrackerbackend.domain.user.UserRepository;
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
 import jakarta.validation.Valid;
@@ -31,6 +34,7 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final GymRepository gymRepository;
 
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
@@ -43,6 +47,9 @@ public class AuthService {
 
         String passwordHash = passwordEncoder.encode(registrationDto.getPassword());
 
+        GymEntity gym = gymRepository.findById(registrationDto.getGymId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gym with id " + registrationDto.getGymId() + " does not exist"));
+
         UserEntity user = UserEntity.builder()
                 .firstName(registrationDto.getFirstName())
                 .middleName(registrationDto.getMiddleName())
@@ -50,7 +57,7 @@ public class AuthService {
                 .dateOfBirth(registrationDto.getDateOfBirth())
                 .sex(registrationDto.getSex())
                 .userType(registrationDto.getUserType())
-                .GymId(registrationDto.getGymId().longValue())
+                .gymid(gym)
                 .build();
 
         LoginCredentialEntity loginCredential = new LoginCredentialEntity();

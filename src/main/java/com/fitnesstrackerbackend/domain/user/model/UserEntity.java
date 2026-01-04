@@ -2,10 +2,14 @@ package com.fitnesstrackerbackend.domain.user.model;
 
 
 import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
+import com.fitnesstrackerbackend.domain.gym.model.GymEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "\"user\"")
@@ -20,8 +24,10 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "gymID", nullable = false)
-    private Long GymId;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "gymid", nullable = false)
+    private GymEntity gymid;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type", nullable = false)
@@ -54,4 +60,9 @@ public class UserEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private LoginCredentialEntity loginCredential;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
+    private Set<UserPhoneNumberEntity> userPhoneNumbers = new LinkedHashSet<>();
+
 }

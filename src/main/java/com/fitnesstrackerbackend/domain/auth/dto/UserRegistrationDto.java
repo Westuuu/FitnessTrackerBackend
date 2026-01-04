@@ -3,13 +3,17 @@ package com.fitnesstrackerbackend.domain.auth.dto;
 import com.fitnesstrackerbackend.domain.user.model.Sex;
 import com.fitnesstrackerbackend.domain.user.model.UserType;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public class UserRegistrationDto {
     @NotBlank
     private String firstName;
@@ -27,16 +31,16 @@ public class UserRegistrationDto {
     @Size(min = 6)
     private String password;
 
-    @NotBlank
+    @NotNull
     private UserType userType;
 
     @NotNull
-    private Integer gymId;
+    private Long gymId;
 
     @NotNull
     @Past
     private LocalDate dateOfBirth;
 
-    @NotBlank
+    @NotNull
     private Sex sex;
 }

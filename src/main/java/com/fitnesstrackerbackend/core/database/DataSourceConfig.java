@@ -48,7 +48,9 @@ public class DataSourceConfig {
 
         RoutingDataSource routingDataSource = new RoutingDataSource();
         routingDataSource.setTargetDataSources(targetDataSources);
-        routingDataSource.setDefaultTargetDataSource(traineeDS);
+//        TODO: fix this
+//        routingDataSource.setDefaultTargetDataSource(traineeDS);
+        routingDataSource.setDefaultTargetDataSource(adminDS);
         routingDataSource.afterPropertiesSet();
 
         return new LazyConnectionDataSourceProxy(routingDataSource);

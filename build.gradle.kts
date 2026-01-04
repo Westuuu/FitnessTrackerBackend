@@ -51,6 +51,12 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.13.0")
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.13.0")
+
+    val flywayVersion = "11.20.0"
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-core
+    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    // https://mvnrepository.com/artifact/org.flywaydb/flyway-database-postgresql
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:$flywayVersion")
 }
 
 tasks.withType<Test> {

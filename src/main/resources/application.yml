@@ -2,9 +2,26 @@ spring:
   application:
     name: FitnessTrackerBackend
 
+  flyway:
+    enabled: true
+    create-schemas: true
+    baseline-on-migrate: true
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?currentSchema=fitnesstracker
+#    user: ${POSTGRES_USER_ADMIN:${POSTGRES_USER}}
+#    password: ${POSTGRES_PASSWORD_ADMIN:${POSTGRES_PASSWORD}}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    placeholders:
+      flyway_admin_password: ${POSTGRES_PASSWORD_ADMIN}
+      flyway_trainer_password: ${POSTGRES_PASSWORD_TRAINER}
+      flyway_trainee_password: ${POSTGRES_PASSWORD_TRAINEE}
+    validate-on-migrate: true
+    schemas: fitnesstracker
+    default-schema: fitnesstracker
+
   datasource:
     admin:
-      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?currentSchema=fitnesstracker
       username: ${POSTGRES_USER_ADMIN:${POSTGRES_USER}}
       password: ${POSTGRES_PASSWORD_ADMIN:${POSTGRES_PASSWORD}}
       driver-class-name: org.postgresql.Driver
@@ -14,7 +31,7 @@ spring:
         maximum-pool-size: 5
 
     trainer:
-      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?currentSchema=fitnesstracker
       username: ${POSTGRES_USER_TRAINER:${POSTGRES_USER}}
       password: ${POSTGRES_PASSWORD_TRAINER:${POSTGRES_PASSWORD}}
       driver-class-name: org.postgresql.Driver
@@ -24,7 +41,7 @@ spring:
         maximum-pool-size: 10
 
     trainee:
-      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?currentSchema=fitnesstracker
       username: ${POSTGRES_USER_TRAINEE:${POSTGRES_USER}}
       password: ${POSTGRES_PASSWORD_TRAINEE:${POSTGRES_PASSWORD}}
       driver-class-name: org.postgresql.Driver
@@ -35,10 +52,13 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: fitnesstracker
+    open-in-view: false
 
 jwt:
   secret: ${JWT_SECRET}

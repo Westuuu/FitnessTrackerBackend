@@ -15,6 +15,7 @@ spring:
       flyway_admin_password: ${POSTGRES_PASSWORD_ADMIN}
       flyway_trainer_password: ${POSTGRES_PASSWORD_TRAINER}
       flyway_trainee_password: ${POSTGRES_PASSWORD_TRAINEE}
+      flyway_auth_password: ${POSTGRES_PASSWORD_AUTH_ROLE}
     validate-on-migrate: true
     schemas: fitnesstracker
     default-schema: fitnesstracker
@@ -48,7 +49,17 @@ spring:
       hikari:
         pool-name: TraineePool
         minimum-idle: 5
-        maximum-pool-size: 20
+        maximum-pool-size: 50
+
+    auth:
+      jdbc-url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}?currentSchema=fitnesstracker
+      username: ${POSTGRES_USER_AUTH_ROLE:${POSTGRES_AUTH_ROLE}}
+      password: ${POSTGRES_PASSWORD_AUTH_ROLE:${POSTGRES_PASSWORD_AUTH_ROLE}}
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        pool-name: AuthPool
+        minimum-idle: 1
+        maximum-pool-size: 10
 
   jpa:
     hibernate:

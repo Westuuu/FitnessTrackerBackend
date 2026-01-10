@@ -10,7 +10,9 @@ BEGIN
     END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = fitnesstracker;
 
 DROP TRIGGER IF EXISTS trg_create_user_profile ON "user";
 CREATE TRIGGER trg_create_user_profile

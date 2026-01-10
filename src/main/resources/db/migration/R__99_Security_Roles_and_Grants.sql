@@ -14,6 +14,9 @@ $$
         IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'trainee_role') THEN
             CREATE ROLE trainee_role;
         END IF;
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'auth_role') THEN
+            CREATE ROLE auth_role;
+        END IF;
     END
 $$;
 
@@ -34,21 +37,30 @@ $$
         IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'db_trainee') THEN
             CREATE USER db_trainee WITH PASSWORD '${flyway_trainee_password}';
         END IF;
+
+        -- Rola autoryzacji
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'db_auth') THEN
+            CREATE USER db_auth WITH PASSWORD '${flyway_auth_password}';
+        END IF;
+
     END
 $$;
 
 GRANT admin_role TO db_admin;
 GRANT trainer_role TO db_trainer;
 GRANT trainee_role TO db_trainee;
+GRANT auth_role TO db_auth;
 
-GRANT CONNECT ON DATABASE fitness_tracker TO db_admin, db_trainer, db_trainee;
+GRANT CONNECT ON DATABASE fitness_tracker TO db_admin, db_trainer, db_trainee, db_auth;
 
-GRANT USAGE ON SCHEMA fitnesstracker TO admin_role, trainer_role, trainee_role;
+GRANT USAGE ON SCHEMA fitnesstracker TO admin_role, trainer_role, trainee_role, db_auth;
 
 -- Automatyczne ustawienie ścieżki
 ALTER ROLE db_admin SET search_path TO fitnesstracker;
 ALTER ROLE db_trainer SET search_path TO fitnesstracker;
 ALTER ROLE db_trainee SET search_path TO fitnesstracker;
+ALTER ROLE db_auth SET search_path TO fitnesstracker;
+
 
 
 -- ======================================================================================
@@ -103,7 +115,6 @@ GRANT SELECT ON v_trainer_trainees TO trainer_role;
 GRANT EXECUTE ON FUNCTION sp_generate_progress_report(INT) TO trainer_role;
 GRANT EXECUTE ON PROCEDURE sp_duplicate_training_plan(INT, INT) TO trainer_role;
 
-ALTER DEFAULT PRIVILEGES IN SCHEMA fitnesstracker GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO trainer_role;
 
 -- ======================================================================================
 -- UPRAWNIENIA TRAINEE_ROLE
@@ -147,5 +158,22 @@ GRANT SELECT ON v_trainer_trainees TO trainee_role;
 
 GRANT EXECUTE ON FUNCTION sp_generate_progress_report(INT) TO trainee_role;
 
-ALTER DEFAULT PRIVILEGES IN SCHEMA fitnesstracker GRANT SELECT ON TABLES TO trainee_role;
+
+-- ======================================================================================
+-- UPRAWNIENIA AUTH_ROLE
+-- ======================================================================================
+
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA fitnesstracker TO auth_role;
+
+GRANT EXECUTE ON FUNCTION fn_create_user_profile() TO auth_role;
+
+
+GRANT SELECT ON login_credential TO auth_role;
+GRANT SELECT ON "user" TO auth_role;
+GRANT SELECT ON gym TO auth_role;
+GRANT SELECT ON address to auth_role;
+
+GRANT INSERT ON "user" TO auth_role;
+GRANT INSERT ON login_credential TO auth_role;
+
 

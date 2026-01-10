@@ -2,15 +2,14 @@ package com.fitnesstrackerbackend.domain.auth;
 
 import com.fitnesstrackerbackend.core.exception.ResourceNotFoundException;
 import com.fitnesstrackerbackend.core.security.JwtService;
-import com.fitnesstrackerbackend.domain.auth.dto.LoginRequestDto;
-import com.fitnesstrackerbackend.domain.auth.dto.LoginResponseDto;
-import com.fitnesstrackerbackend.domain.auth.dto.UserRegistrationDto;
+import com.fitnesstrackerbackend.domain.auth.dto.*;
 import com.fitnesstrackerbackend.domain.auth.exception.UserAlreadyExistsException;
 import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
 import com.fitnesstrackerbackend.domain.gym.GymRepository;
 import com.fitnesstrackerbackend.domain.gym.model.GymEntity;
-import com.fitnesstrackerbackend.domain.user.UserRepository;
+import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
+import com.fitnesstrackerbackend.domain.user.model.UserType;
 import jakarta.validation.Valid;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,46 +40,46 @@ public class AuthService {
 
     @Transactional
     public LoginResponseDto register(@Valid UserRegistrationDto registrationDto) {
-        if (loginCredentialRepository.existsByEmail(registrationDto.getEmail())) {
-            throw new UserAlreadyExistsException(registrationDto.getEmail());
+        if (loginCredentialRepository.existsByEmail(registrationDto.email())) {
+            throw new UserAlreadyExistsException(registrationDto.email());
         }
 
-        String passwordHash = passwordEncoder.encode(registrationDto.getPassword());
+        String passwordHash = passwordEncoder.encode(registrationDto.password());
 
-        GymEntity gym = gymRepository.findById(registrationDto.getGymId())
-                .orElseThrow(() -> new ResourceNotFoundException("Gym with id " + registrationDto.getGymId() + " does not exist"));
+        GymEntity gym = gymRepository.findById(registrationDto.gymId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gym with id " + registrationDto.gymId() + " does not exist"));
 
         UserEntity user = UserEntity.builder()
-                .firstName(registrationDto.getFirstName())
-                .middleName(registrationDto.getMiddleName())
-                .lastName(registrationDto.getLastName())
-                .dateOfBirth(registrationDto.getDateOfBirth())
-                .sex(registrationDto.getSex())
-                .userType(registrationDto.getUserType())
-                .gymid(gym)
+                .firstName(registrationDto.firstName())
+                .middleName(registrationDto.middleName())
+                .lastName(registrationDto.lastName())
+                .dateOfBirth(registrationDto.dateOfBirth())
+                .sex(registrationDto.sex())
+                .userType(registrationDto.userType())
+                .gym(gym)
                 .build();
 
-        LoginCredentialEntity loginCredential = new LoginCredentialEntity();
-        loginCredential.setEmail(registrationDto.getEmail());
-        loginCredential.setPasswordHash(passwordHash);
-        loginCredential.setUser(user);
-
-        user.setLoginCredential(loginCredential);
+        LoginCredentialEntity loginCredential = LoginCredentialEntity.builder()
+                .email(registrationDto.email())
+                .passwordHash(passwordHash)
+                .user(user)
+                .build();
 
         UserEntity savedUser = userRepository.save(user);
+        LoginCredentialEntity savedCredentials = loginCredentialRepository.save(loginCredential);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getLoginCredential().getEmail());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(savedCredentials.getEmail());
         String token = jwtService.generateToken(userDetails);
 
-        return buildLoginResponse(savedUser, token);
+        return buildLoginResponse(savedUser, savedCredentials, token);
     }
 
-    private LoginResponseDto buildLoginResponse(UserEntity user, String token) {
+    private LoginResponseDto buildLoginResponse(UserEntity user, LoginCredentialEntity loginCredentials, String token) {
         return LoginResponseDto.builder()
                 .token(token)
                 .tokenType("Bearer")
                 .userId(user.getId())
-                .email(user.getLoginCredential().getEmail())
+                .email(loginCredentials.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .userType(user.getUserType())
@@ -100,9 +99,49 @@ public class AuthService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(userDetails);
 
-        UserEntity user = userRepository.findByLoginCredentialEmail(loginRequest.getEmail())
+        LoginCredentialEntity userLoginCredentials = loginCredentialRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new BadCredentialsException("Invalid email or password"));
 
-        return buildLoginResponse(user, token);
+        UserEntity user = userLoginCredentials.getUser();
+        return buildLoginResponse(user, userLoginCredentials, token);
+    }
+
+    @Transactional
+    public AdminRegistrationResponseDto registerAdmin(@Valid AdminRegistrationDto registrationDto) {
+        if (loginCredentialRepository.existsByEmail(registrationDto.email())) {
+            throw new UserAlreadyExistsException(registrationDto.email());
+        }
+
+        GymEntity gym = gymRepository.findById(registrationDto.gymId())
+                .orElseThrow(() -> new ResourceNotFoundException("Gym with id " + registrationDto.gymId() + " does not exist"));
+
+        UserEntity user = UserEntity.builder()
+                .firstName(registrationDto.firstName())
+                .middleName(registrationDto.middleName())
+                .lastName(registrationDto.lastName())
+                .dateOfBirth(registrationDto.dateOfBirth())
+                .sex(registrationDto.sex())
+                .userType(UserType.ADMIN)
+                .gym(gym)
+                .build();
+
+
+        LoginCredentialEntity loginCredential = LoginCredentialEntity.builder()
+                .email(registrationDto.email())
+                .passwordHash(passwordEncoder.encode(registrationDto.password()))
+                .user(user)
+                .build();
+
+        userRepository.save(user);
+        loginCredentialRepository.save(loginCredential);
+
+        return AdminRegistrationResponseDto.builder()
+                .userId(user.getId())
+                .firstName(user.getFirstName())
+                .email(loginCredential.getEmail())
+                .lastName(user.getLastName())
+                .userType(user.getUserType())
+                .gymId(user.getGym().getId())
+                .build();
     }
 }

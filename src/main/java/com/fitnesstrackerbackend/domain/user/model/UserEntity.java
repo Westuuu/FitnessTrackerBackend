@@ -1,6 +1,5 @@
 package com.fitnesstrackerbackend.domain.user.model;
 
-
 import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
 import com.fitnesstrackerbackend.domain.goal.model.GoalEntity;
 import com.fitnesstrackerbackend.domain.gym.model.GymEntity;
@@ -27,10 +26,9 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "gymid", nullable = false)
-    private GymEntity gymid;
+    private GymEntity gym;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_type", nullable = false)
@@ -52,36 +50,16 @@ public class UserEntity {
     @Column(name = "sex", nullable = false)
     private Sex sex;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private TraineeInfoEntity traineeInfo;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private TrainerInfoEntity trainerInfo;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private AdminInfoEntity adminInfo;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private LoginCredentialEntity loginCredential;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
-    private Set<UserPhoneNumberEntity> userPhoneNumbers = new LinkedHashSet<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
-    private Set<GoalEntity> goalEntities = new LinkedHashSet<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
-    private Set<TraineeInfoEntity> traineeInfos = new LinkedHashSet<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
-    private Set<TrainingPlanRoleEntity> trainingPlanRoles = new LinkedHashSet<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
-    private Set<UserTrainingPlanEntity> userTrainingPlans = new LinkedHashSet<>();
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private LoginCredentialEntity loginCredential;
+//
+//    @OneToOne(mappedBy = "user")
+//    private TraineeInfoEntity traineeInfo;
+//
+//    @OneToOne(mappedBy = "user")
+//    private TrainerInfoEntity trainerInfo;
+//
+//    @OneToOne(mappedBy = "user")
+//    private AdminInfoEntity adminInfo;
 
 }

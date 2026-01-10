@@ -1,14 +1,11 @@
 package com.fitnesstrackerbackend.domain.auth.dto;
 
 import com.fitnesstrackerbackend.domain.user.model.Sex;
-import com.fitnesstrackerbackend.domain.user.model.UserType;
 import jakarta.validation.constraints.*;
-import lombok.Builder;
 
 import java.time.LocalDate;
 
-@Builder
-public record UserRegistrationDto(
+public record AdminRegistrationDto(
         @NotBlank
         String firstName,
 
@@ -24,9 +21,6 @@ public record UserRegistrationDto(
         @NotBlank
         @Size(min = 6)
         String password,
-
-        @NotNull
-        UserType userType,
 
         @NotNull
         Long gymId,

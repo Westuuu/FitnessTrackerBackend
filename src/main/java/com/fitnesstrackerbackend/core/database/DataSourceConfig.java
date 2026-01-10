@@ -1,5 +1,6 @@
 package com.fitnesstrackerbackend.core.database;
 
+import com.fitnesstrackerbackend.domain.user.model.UserType;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -35,22 +36,25 @@ public class DataSourceConfig {
     }
 
     @Bean
+    @ConfigurationProperties(prefix = "spring.datasource.auth")
+    public DataSource authDataSource() {return DataSourceBuilder.create().type(HikariDataSource.class).build();}
+
+    @Bean
     @Primary
     public DataSource routingDataSource (
             @Qualifier("adminDataSource") DataSource adminDS,
             @Qualifier("traineeDataSource") DataSource traineeDS,
-            @Qualifier("trainerDataSource") DataSource trainerDS
+            @Qualifier("trainerDataSource") DataSource trainerDS,
+            @Qualifier("authDataSource") DataSource authDS
     ) {
         Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DbRole.ADMIN, adminDS);
-        targetDataSources.put(DbRole.TRAINEE, traineeDS);
-        targetDataSources.put(DbRole.TRAINER, trainerDS);
+        targetDataSources.put(UserType.ADMIN, adminDS);
+        targetDataSources.put(UserType.TRAINEE, traineeDS);
+        targetDataSources.put(UserType.TRAINER, trainerDS);
 
         RoutingDataSource routingDataSource = new RoutingDataSource();
         routingDataSource.setTargetDataSources(targetDataSources);
-//        TODO: fix this
-//        routingDataSource.setDefaultTargetDataSource(traineeDS);
-        routingDataSource.setDefaultTargetDataSource(adminDS);
+        routingDataSource.setDefaultTargetDataSource(authDS);
         routingDataSource.afterPropertiesSet();
 
         return new LazyConnectionDataSourceProxy(routingDataSource);

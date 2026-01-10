@@ -1,8 +1,6 @@
 package com.fitnesstrackerbackend.domain.auth;
 
-import com.fitnesstrackerbackend.domain.auth.dto.LoginRequestDto;
-import com.fitnesstrackerbackend.domain.auth.dto.LoginResponseDto;
-import com.fitnesstrackerbackend.domain.auth.dto.UserRegistrationDto;
+import com.fitnesstrackerbackend.domain.auth.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -22,7 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
-    private final JdbcTemplate jdbcTemplate;
+
+    @PostMapping("/admin/register")
+    public ResponseEntity<AdminRegistrationResponseDto> registerAdmin(
+            @RequestBody @Valid AdminRegistrationDto registrationDto
+    ) {
+        AdminRegistrationResponseDto responseDto = authService.registerAdmin(registrationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
 
     @PostMapping("/register")
     public ResponseEntity<LoginResponseDto> register(

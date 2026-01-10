@@ -1,5 +1,6 @@
 package com.fitnesstrackerbackend.core.database;
 
+import com.fitnesstrackerbackend.domain.user.model.UserType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,8 +25,8 @@ public class DatabaseRoutingFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
-            DbRole dbRole = determineDbRole(authentication.getAuthorities());
-            DatabaseContextHolder.setRole(dbRole);
+            UserType userType = determineDbRole(authentication.getAuthorities());
+            DatabaseContextHolder.setRole(userType);
         }
 
         try {
@@ -36,13 +37,13 @@ public class DatabaseRoutingFilter extends OncePerRequestFilter {
 
     }
 
-    private DbRole determineDbRole(Collection<? extends GrantedAuthority> authorities) {
+    private UserType determineDbRole(Collection<? extends GrantedAuthority> authorities) {
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
-            if ("ROLE_ADMIN".equals(role)) return DbRole.ADMIN;
-            if ("ROLE_TRAINER".equals(role)) return DbRole.TRAINER;
+            if ("ROLE_ADMIN".equals(role)) return UserType.ADMIN;
+            if ("ROLE_TRAINER".equals(role)) return UserType.TRAINER;
         }
 
-        return DbRole.TRAINEE;
+        return UserType.TRAINEE;
     }
 }

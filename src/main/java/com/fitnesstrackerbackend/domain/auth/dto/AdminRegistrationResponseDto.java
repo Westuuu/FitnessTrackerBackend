@@ -1,17 +1,10 @@
 package com.fitnesstrackerbackend.domain.auth.dto;
 
 import com.fitnesstrackerbackend.domain.user.model.UserType;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Builder
-public record LoginResponseDto (
-        String token,
-
-        String tokenType,
-
+public record AdminRegistrationResponseDto(
         Long userId,
 
         String email,
@@ -22,6 +15,6 @@ public record LoginResponseDto (
 
         UserType userType,
 
-        Long expiresIn
+        Long gymId
 ) {
 }

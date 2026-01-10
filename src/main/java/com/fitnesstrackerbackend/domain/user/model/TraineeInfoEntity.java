@@ -17,7 +17,7 @@ public class TraineeInfoEntity {
     @Column(name = "userID")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "userID")
     private UserEntity user;

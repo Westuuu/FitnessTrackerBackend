@@ -2,7 +2,10 @@ package com.fitnesstrackerbackend.domain.user.model;
 
 
 import com.fitnesstrackerbackend.domain.auth.model.LoginCredentialEntity;
+import com.fitnesstrackerbackend.domain.goal.model.GoalEntity;
 import com.fitnesstrackerbackend.domain.gym.model.GymEntity;
+import com.fitnesstrackerbackend.domain.trainingplan.model.TrainingPlanRoleEntity;
+import com.fitnesstrackerbackend.domain.trainingplan.model.UserTrainingPlanEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -64,5 +67,21 @@ public class UserEntity {
     @Builder.Default
     @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
     private Set<UserPhoneNumberEntity> userPhoneNumbers = new LinkedHashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
+    private Set<GoalEntity> goalEntities = new LinkedHashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
+    private Set<TraineeInfoEntity> traineeInfos = new LinkedHashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
+    private Set<TrainingPlanRoleEntity> trainingPlanRoles = new LinkedHashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "userid", cascade = CascadeType.ALL)
+    private Set<UserTrainingPlanEntity> userTrainingPlans = new LinkedHashSet<>();
 
 }

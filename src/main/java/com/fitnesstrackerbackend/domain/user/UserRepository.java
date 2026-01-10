@@ -17,7 +17,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             "LEFT JOIN FETCH u.trainerInfo " +
             "LEFT JOIN FETCH u.adminInfo " +
             "WHERE u.id = :id")
-    Optional<UserEntity> findByIdWithAllDetails(@Param("id") Long id);
+    Optional<UserEntity> findByIdForAdmin(@Param("id") Long id);
+
+    @Query("SELECT u FROM UserEntity u " +
+            "LEFT JOIN FETCH u.traineeInfo " +
+            "LEFT JOIN FETCH u.trainerInfo " +
+            "WHERE u.id = :id")
+    Optional<UserEntity> findByIdForNonAdmin(@Param("id") Long id);
 
     boolean existsByLoginCredentialEmail(String loginCredentialEmail);
 
@@ -25,4 +31,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             "JOIN FETCH u.loginCredential lc " +
             "WHERE lc.email = :email")
     Optional<UserEntity> findByLoginCredentialEmail(String email);
+
 }

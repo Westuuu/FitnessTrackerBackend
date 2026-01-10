@@ -10,7 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @Setter
 @Entity
-@Table(name = "exercise_instance", schema = "public", indexes = {@Index(name = "idx_exercise_instance_workout_exercise",
+@Table(name = "exercise_instance", indexes = {@Index(name = "idx_exercise_instance_workout_exercise",
         columnList = "user_workout_exerciseid")})
 public class ExerciseInstanceEntity {
     @Id

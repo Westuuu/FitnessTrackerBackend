@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "exercise_instance_set", schema = "public", uniqueConstraints = {@UniqueConstraint(name = "exercise_instance_set_unique_per_exercise",
+@Table(name = "exercise_instance_set", uniqueConstraints = {@UniqueConstraint(name = "exercise_instance_set_unique_per_exercise",
         columnNames = {
                 "exercise_instanceid",
                 "set_number"})})

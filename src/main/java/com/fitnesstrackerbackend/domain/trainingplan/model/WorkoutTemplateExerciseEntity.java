@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "workout_template_exercise", schema = "public", indexes = {@Index(name = "idx_workout_template_exercise_day",
+@Table(name = "workout_template_exercise", indexes = {@Index(name = "idx_workout_template_exercise_day",
         columnList = "workout_templateid")}, uniqueConstraints = {@UniqueConstraint(name = "workout_template_exercise_unique_order",
         columnNames = {
                 "workout_templateid",

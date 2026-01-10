@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "membership", schema = "public", indexes = {
+@Table(name = "membership", indexes = {
         @Index(name = "unique_active_membership",
                 columnList = "trainee_infoid",
                 unique = true),

@@ -22,7 +22,7 @@ public class OpeningHoursEntity {
     @NotNull
     @Column(name = "opens_at", nullable = false)
     private LocalTime opensAt;
-    @MapsId
+    @MapsId("gymid")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "gymid", nullable = false)
     private GymEntity gymid;

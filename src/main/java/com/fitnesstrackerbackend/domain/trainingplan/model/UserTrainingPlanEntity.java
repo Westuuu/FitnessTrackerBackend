@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_training_plan", schema = "public", indexes = {@Index(name = "idx_user_training_plan_user_status",
+@Table(name = "user_training_plan", indexes = {@Index(name = "idx_user_training_plan_user_status",
         columnList = "userid, status")}, uniqueConstraints = {@UniqueConstraint(name = "user_training_plan_unique",
         columnNames = {
                 "userid",

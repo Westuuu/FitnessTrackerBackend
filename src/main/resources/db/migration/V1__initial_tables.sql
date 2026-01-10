@@ -1,15 +1,15 @@
 
 CREATE TABLE workout_template_day (
-                                      ID              SERIAL NOT NULL,
-                                      training_planID int4 NOT NULL,
+                                      ID              BIGSERIAL NOT NULL,
+                                      training_planID int8 NOT NULL,
                                       name            varchar(255) NOT NULL,
                                       day_of_week     int4 NOT NULL CHECK(day_of_week >= 0 AND day_of_week < 7),
                                       notes           text,
                                       PRIMARY KEY (ID));
 
 CREATE TABLE workout_session (
-                                 ID                   SERIAL NOT NULL,
-                                 user_training_planID int4 NOT NULL,
+                                 ID                   BIGSERIAL NOT NULL,
+                                 user_training_planID int8 NOT NULL,
                                  session_date         date NOT NULL,
                                  start_time           time NOT NULL,
                                  end_time             time,
@@ -19,7 +19,7 @@ CREATE TABLE workout_session (
                                  PRIMARY KEY (ID));
 
 CREATE TABLE exercise_template (
-                                   ID               SERIAL NOT NULL,
+                                   ID               BIGSERIAL NOT NULL,
                                    name             varchar(255) NOT NULL,
                                    description      text,
                                    muscle_group     varchar(50) NOT NULL CHECK(muscle_group IN ('CHEST', 'BACK', 'LEGS', 'SHOULDERS', 'ARMS', 'CORE', 'FULL_BODY')),
@@ -29,16 +29,16 @@ CREATE TABLE exercise_template (
                                    PRIMARY KEY (ID));
 
 CREATE TABLE gym (
-                     ID         SERIAL NOT NULL,
+                     ID         BIGSERIAL NOT NULL,
                      name       varchar(255) NOT NULL,
                      email      varchar(255) NOT NULL UNIQUE,
                      created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
                      PRIMARY KEY (ID));
 
 CREATE TABLE goal (
-                      ID                  SERIAL NOT NULL,
-                      userID              int4 NOT NULL,
-                      exercise_templateID int4 NOT NULL,
+                      ID                  BIGSERIAL NOT NULL,
+                      userID              int8 NOT NULL,
+                      exercise_templateID int8 NOT NULL,
                       title               varchar(255) NOT NULL,
                       description         text,
                       target_value        numeric(10, 2) NOT NULL CHECK(target_value > 0),
@@ -50,15 +50,15 @@ CREATE TABLE goal (
                       PRIMARY KEY (ID));
 
 CREATE TABLE exercise_instance (
-                                   ID                      SERIAL NOT NULL,
-                                   user_workout_exerciseID int4 NOT NULL,
+                                   ID                      BIGSERIAL NOT NULL,
+                                   user_workout_exerciseID int8 NOT NULL,
                                    order_in_workout        int4 NOT NULL,
                                    completed               bool DEFAULT 'FALSE' NOT NULL,
                                    PRIMARY KEY (ID));
 
 CREATE TABLE exercise_instance_set (
-                                       ID                  SERIAL NOT NULL,
-                                       exercise_instanceID int4 NOT NULL,
+                                       ID                  BIGSERIAL NOT NULL,
+                                       exercise_instanceID int8 NOT NULL,
                                        set_number          int4 NOT NULL CHECK(set_number > 0),
                                        reps                int4 NOT NULL CHECK(reps > 0),
                                        weight              numeric(6, 2) NOT NULL CHECK(weight > 0),
@@ -68,7 +68,7 @@ CREATE TABLE exercise_instance_set (
                                            UNIQUE (exercise_instanceID, set_number));
 
 CREATE TABLE training_plan (
-                               ID               SERIAL NOT NULL,
+                               ID               BIGSERIAL NOT NULL,
                                name             varchar(255) NOT NULL,
                                description      text,
                                difficulty_level varchar(20) CHECK(difficulty_level IN ('BEGINNER', 'INTERMEDIATE', 'ADVANCED')),
@@ -79,9 +79,9 @@ CREATE TABLE training_plan (
                                PRIMARY KEY (ID));
 
 CREATE TABLE workout_template_exercise (
-                                           ID                  SERIAL NOT NULL,
-                                           workout_templateID  int4 NOT NULL,
-                                           exercise_templateID int4 NOT NULL,
+                                           ID                  BIGSERIAL NOT NULL,
+                                           workout_templateID  int8 NOT NULL,
+                                           exercise_templateID int8 NOT NULL,
                                            order_in_workout    int4 NOT NULL,
                                            planned_sets        int4 NOT NULL CHECK(planned_sets > 0),
                                            planned_reps        int4 NOT NULL CHECK(planned_reps > 0),
@@ -92,13 +92,13 @@ CREATE TABLE workout_template_exercise (
                                                UNIQUE (workout_templateID, order_in_workout));
 
 CREATE TABLE trainee_info (
-                              userID         int4 NOT NULL,
-                              trainer_userID int4,
+                              userID         int8 NOT NULL,
+                              trainer_userID int8,
                               exercise_unit  varchar(10) NOT NULL CHECK(exercise_unit IN ('KG', 'LB')),
                               PRIMARY KEY (userID));
 
 CREATE TABLE trainer_info (
-                              userID         int4 NOT NULL,
+                              userID         int8 NOT NULL,
                               specialization varchar(255),
                               bio            text,
                               hire_date      date NOT NULL,
@@ -106,8 +106,8 @@ CREATE TABLE trainer_info (
                               PRIMARY KEY (userID));
 
 CREATE TABLE "user" (
-                        ID            SERIAL NOT NULL,
-                        gymID         int4 NOT NULL,
+                        ID            BIGSERIAL NOT NULL,
+                        gymID         int8 NOT NULL,
                         user_type     varchar(20) NOT NULL CHECK(user_type IN ('ADMIN', 'TRAINER', 'TRAINEE')),
                         first_name    varchar(50) NOT NULL,
                         middle_name   varchar(50),
@@ -117,26 +117,26 @@ CREATE TABLE "user" (
                         PRIMARY KEY (ID));
 
 CREATE TABLE admin_info (
-                            userID    int4 NOT NULL,
+                            userID    int8 NOT NULL,
                             hire_date date NOT NULL,
                             is_active bool NOT NULL,
                             PRIMARY KEY (userID));
 
 CREATE TABLE login_credential (
-                                  userID        int4 NOT NULL,
+                                  userID        int8 NOT NULL,
                                   email         varchar(255) NOT NULL UNIQUE,
                                   password_hash varchar(255) NOT NULL,
                                   PRIMARY KEY (userID));
 
 CREATE TABLE user_phone_number (
-                                   userID         int4 NOT NULL,
+                                   userID         int8 NOT NULL,
                                    phone_number   varchar(15) NOT NULL,
                                    country_prefix varchar(4) NOT NULL,
                                    is_primary     bool DEFAULT 'False' NOT NULL,
                                    PRIMARY KEY (userID, phone_number));
 
 CREATE TABLE address (
-                         gymID            int4 NOT NULL,
+                         gymID            int8 NOT NULL,
                          country          varchar(100) NOT NULL,
                          post_code        varchar(9) NOT NULL,
                          city             varchar(100) NOT NULL,
@@ -146,8 +146,8 @@ CREATE TABLE address (
                          PRIMARY KEY (gymID));
 
 CREATE TABLE membership (
-                            ID                    SERIAL NOT NULL,
-                            trainee_infoID        int4 NOT NULL,
+                            ID                    BIGSERIAL NOT NULL,
+                            trainee_infoID        int8 NOT NULL,
                             membership_status     varchar(20) NOT NULL CHECK(membership_status IN ('ACTIVE', 'PAUSED', 'EXPIRED')),
                             membership_start_date date NOT NULL,
                             membership_end_date   date,
@@ -156,9 +156,9 @@ CREATE TABLE membership (
                                 CHECK (membership_end_date IS NULL OR membership_end_date >= membership_start_date));
 
 CREATE TABLE training_plan_role (
-                                    ID              SERIAL NOT NULL,
-                                    training_planID int4 NOT NULL,
-                                    userID          int4 NOT NULL,
+                                    ID              BIGSERIAL NOT NULL,
+                                    training_planID int8 NOT NULL,
+                                    userID          int8 NOT NULL,
                                     role            varchar(20) NOT NULL CHECK(role IN ('OWNER', 'EDITOR', 'VIEWER')),
                                     granted_at      timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
                                     PRIMARY KEY (ID),
@@ -166,9 +166,9 @@ CREATE TABLE training_plan_role (
                                         UNIQUE (training_planID, userID));
 
 CREATE TABLE user_training_plan (
-                                    ID              SERIAL NOT NULL,
-                                    training_planID int4 NOT NULL,
-                                    userID          int4 NOT NULL,
+                                    ID              BIGSERIAL NOT NULL,
+                                    training_planID int8 NOT NULL,
+                                    userID          int8 NOT NULL,
                                     start_date      date NOT NULL,
                                     end_date        date,
                                     status          varchar(20) NOT NULL CHECK(status IN ('ACTIVE', 'PAUSED', 'COMPLETED', 'CANCELLED')),
@@ -179,9 +179,9 @@ CREATE TABLE user_training_plan (
                                         UNIQUE (userID, training_planID));
 
 CREATE TABLE user_workout_exercise (
-                                       ID                  SERIAL NOT NULL,
-                                       workout_sessionID   int4 NOT NULL,
-                                       exercise_templateID int4 NOT NULL,
+                                       ID                  BIGSERIAL NOT NULL,
+                                       workout_sessionID   int8 NOT NULL,
+                                       exercise_templateID int8 NOT NULL,
                                        order_in_workout    int4 NOT NULL,
                                        planned_sets        int4 NOT NULL,
                                        planned_reps        int4 NOT NULL,
@@ -192,8 +192,8 @@ CREATE TABLE user_workout_exercise (
                                            UNIQUE (workout_sessionID, order_in_workout));
 
 CREATE TABLE opening_hours (
-                               gymID       int4 NOT NULL,
-                               day_of_week int4 NOT NULL CHECK(day_of_week BETWEEN 0 AND 6),
+                               gymID       int8 NOT NULL,
+                               day_of_week int8 NOT NULL CHECK(day_of_week BETWEEN 0 AND 6),
                                opens_at    time NOT NULL,
                                closes_at   time NOT NULL,
                                PRIMARY KEY (gymID, day_of_week),
@@ -201,7 +201,7 @@ CREATE TABLE opening_hours (
                                    CHECK (closes_at > opens_at));
 
 CREATE TABLE gym_phone_number (
-                                  gymID          int4 NOT NULL,
+                                  gymID          int8 NOT NULL,
                                   phone_number   varchar(15) NOT NULL,
                                   country_prefix varchar(4) NOT NULL,
                                   is_primary     bool NOT NULL,
@@ -210,7 +210,7 @@ CREATE TABLE gym_phone_number (
                                       UNIQUE (is_primary, gymID));
 
 CREATE TABLE body_metrics (
-                              userID int4 NOT NULL,
+                              userID int8 NOT NULL,
                               "date" date NOT NULL,
                               weight numeric(6, 2) NOT NULL,
                               height int4 NOT NULL,

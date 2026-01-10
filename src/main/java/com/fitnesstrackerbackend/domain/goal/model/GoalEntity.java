@@ -16,12 +16,12 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Entity
-@Table(name = "goal", schema = "public", indexes = {
+@Table(name = "goal", indexes = {
         @Index(name = "idx_goal_user_status",
                 columnList = "userid, status"),
         @Index(name = "idx_goal_exercise_template",
                 columnList = "exercise_templateid")})
-public class Goal {
+public class GoalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

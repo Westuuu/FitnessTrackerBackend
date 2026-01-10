@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "workout_template_day", schema = "public", indexes = {@Index(name = "idx_workout_template_day_plan",
+@Table(name = "workout_template_day", indexes = {@Index(name = "idx_workout_template_day_plan",
         columnList = "training_planid")})
 public class WorkoutTemplateDayEntity {
     @Id

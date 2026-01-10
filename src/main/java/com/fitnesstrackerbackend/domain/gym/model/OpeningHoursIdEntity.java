@@ -17,7 +17,7 @@ public class OpeningHoursIdEntity implements Serializable {
     private static final long serialVersionUID = 6931135964499613190L;
     @NotNull
     @Column(name = "gymid", nullable = false)
-    private Integer gymid;
+    private Long gymid;
 
     @NotNull
     @Column(name = "day_of_week", nullable = false)

@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "workout_session", schema = "public", indexes = {
+@Table(name = "workout_session", indexes = {
         @Index(name = "idx_workout_session_plan_date",
                 columnList = "user_training_planid, session_date"),
         @Index(name = "idx_workout_session_plan_completed",

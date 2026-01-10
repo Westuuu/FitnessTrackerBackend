@@ -18,7 +18,7 @@ public class GymPhoneNumberEntityIdEntity implements Serializable {
     private static final long serialVersionUID = 6751213617068985941L;
     @NotNull
     @Column(name = "gymid", nullable = false)
-    private Integer gymid;
+    private Long gymid;
 
     @Size(max = 15)
     @NotNull

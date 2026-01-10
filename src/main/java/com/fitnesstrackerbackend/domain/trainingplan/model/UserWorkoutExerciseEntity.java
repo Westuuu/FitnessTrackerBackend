@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "user_workout_exercise", schema = "public", indexes = {@Index(name = "idx_user_workout_exercise_session",
+@Table(name = "user_workout_exercise", indexes = {@Index(name = "idx_user_workout_exercise_session",
         columnList = "workout_sessionid")}, uniqueConstraints = {@UniqueConstraint(name = "user_workout_exercise_unique_order",
         columnNames = {
                 "workout_sessionid",

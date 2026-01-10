@@ -13,7 +13,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "training_plan_role", schema = "public", indexes = {@Index(name = "idx_training_plan_role_user",
+@Table(name = "training_plan_role", indexes = {@Index(name = "idx_training_plan_role_user",
         columnList = "userid")}, uniqueConstraints = {@UniqueConstraint(name = "training_plan_role_unique",
         columnNames = {
                 "training_planid",

@@ -24,7 +24,7 @@ public class GymPhoneNumberEntityEntity {
     @Column(name = "country_prefix", nullable = false, length = 4)
     private String countryPrefix;
 
-    @MapsId
+    @MapsId("gymid")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "gymid", nullable = false)
     private GymEntity gymid;

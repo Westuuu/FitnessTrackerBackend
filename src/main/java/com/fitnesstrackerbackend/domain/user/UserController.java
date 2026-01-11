@@ -2,6 +2,7 @@ package com.fitnesstrackerbackend.domain.user;
 
 import com.fitnesstrackerbackend.core.security.AppUserDetails;
 import com.fitnesstrackerbackend.domain.user.dto.TraineeOverviewDto;
+import com.fitnesstrackerbackend.domain.user.dto.TrainerAssigmentResponseDto;
 import com.fitnesstrackerbackend.domain.user.dto.UserProfileDto;
 import com.fitnesstrackerbackend.domain.user.repository.TrainerTraineeViewRepository;
 import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
@@ -41,5 +42,14 @@ public class UserController {
             @AuthenticationPrincipal AppUserDetails userDetails
     ) {
         return ResponseEntity.ok(userService.getTrainerTrainees(userDetails.getId()));
+    }
+
+    @PutMapping("/{trainerId}/trainees")
+    @PreAuthorize("hasRole('TRAINER')")
+    public ResponseEntity<TrainerAssigmentResponseDto> assignTrainerToTrainee(
+            @PathVariable Long trainerId,
+            @RequestBody Long traineeId
+    ) {
+        return ResponseEntity.ok(userService.assignTrainerToTrainee(trainerId, traineeId));
     }
 }

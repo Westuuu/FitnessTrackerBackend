@@ -27,7 +27,7 @@ public class TrainingPlanRoleEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "training_planid", nullable = false)
-    private TrainingPlanEntity trainingPlanidEntity;
+    private TrainingPlanEntity trainingPlan;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

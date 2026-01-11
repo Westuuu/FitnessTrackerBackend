@@ -3,8 +3,7 @@ package com.fitnesstrackerbackend.domain.trainingplan.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
@@ -17,6 +16,9 @@ import java.time.Instant;
                 columnList = "name"),
         @Index(name = "idx_exercise_template_muscle_group",
                 columnList = "muscle_group")})
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ExerciseTemplateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

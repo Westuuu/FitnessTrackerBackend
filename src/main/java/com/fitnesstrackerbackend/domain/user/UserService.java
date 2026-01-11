@@ -56,12 +56,13 @@ public class UserService {
 
     @Transactional
     public TrainerAssigmentResponseDto assignTrainerToTrainee(Long trainerId, Long traineeId) {
-        Optional<TraineeInfoEntity> traineeInfo = traineeInfoRepository.findById(traineeId);
+        TraineeInfoEntity traineeInfo = traineeInfoRepository.findById(traineeId)
+                .orElseThrow(() -> new UsernameNotFoundException("User with id " + traineeId + " does not exist"));
         UserEntity trainer = userRepository.findById(trainerId)
                 .orElseThrow(() -> new UsernameNotFoundException("User with id " + trainerId + " does not exist"));
-        traineeInfo.ifPresent(
-                traineeInfoEntity -> traineeInfoEntity.setTrainer(trainer)
-        );
+
+        traineeInfo.setTrainer(trainer);
+
         return new TrainerAssigmentResponseDto(trainerId, traineeId, LocalDateTime.now());
 
     }

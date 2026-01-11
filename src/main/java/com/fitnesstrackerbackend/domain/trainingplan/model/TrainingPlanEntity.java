@@ -1,11 +1,14 @@
 package com.fitnesstrackerbackend.domain.trainingplan.model;
 
+import com.fitnesstrackerbackend.domain.trainingplan.enums.DifficultyLevel;
+import com.fitnesstrackerbackend.domain.trainingplan.enums.VisibilityType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Type;
 
 import java.time.Instant;
 
@@ -27,18 +30,20 @@ public class TrainingPlanEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Size(max = 20)
     @Column(name = "difficulty_level", length = 20)
-    private String difficultyLevel;
+    private DifficultyLevel difficultyLevel;
 
     @NotNull
     @Column(name = "duration_weeks", nullable = false)
     private Integer durationWeeks;
 
+    @Enumerated(EnumType.STRING)
     @Size(max = 20)
     @NotNull
     @Column(name = "visibility_type", nullable = false, length = 20)
-    private String visibilityType;
+    private VisibilityType visibilityType;
 
     @NotNull
     @ColumnDefault("CURRENT_TIMESTAMP")

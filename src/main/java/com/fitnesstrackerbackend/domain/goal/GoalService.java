@@ -1,5 +1,7 @@
 package com.fitnesstrackerbackend.domain.goal;
 
+import com.fitnesstrackerbackend.core.exception.BusinessLogicException;
+import com.fitnesstrackerbackend.core.exception.ResourceNotFoundException;
 import com.fitnesstrackerbackend.domain.goal.dto.GoalCreateDto;
 import com.fitnesstrackerbackend.domain.goal.dto.GoalDto;
 import com.fitnesstrackerbackend.domain.goal.model.GoalEntity;
@@ -9,6 +11,7 @@ import com.fitnesstrackerbackend.domain.trainingplan.repositories.ExerciseReposi
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
 import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ public class GoalService {
     private final ExerciseRepository exerciseRepository;
     private final UserRepository userRepository;
 
+
     public List<GoalDto> getGoalsByUserId(Long userId) {
         return goalRepository.findByUserid_Id(userId).stream()
                 .map(this::mapToDto)
@@ -34,10 +38,10 @@ public class GoalService {
     @Transactional
     public GoalDto createGoal(Long userId, GoalCreateDto createDto) {
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         ExerciseTemplateEntity exercise = exerciseRepository.findById(createDto.exerciseTemplateId())
-                .orElseThrow(() -> new RuntimeException("Exercise template not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Exercise template not found"));
 
         GoalEntity goal = new GoalEntity();
         goal.setUserid(user);
@@ -58,10 +62,11 @@ public class GoalService {
     @Transactional
     public void deleteGoal(Integer goalId, Long userId) {
         GoalEntity goal = goalRepository.findById(goalId)
-                .orElseThrow(() -> new RuntimeException("Goal not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Goal not found"));
 
+//        TODO: fix this
         if (!goal.getUserid().getId().equals(userId)) {
-            throw new RuntimeException("Not authorized to delete this goal");
+            throw new BusinessLogicException("Not authorized to delete this goal");
         }
 
         goalRepository.delete(goal);

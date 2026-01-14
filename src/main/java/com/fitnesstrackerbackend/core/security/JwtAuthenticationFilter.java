@@ -1,7 +1,6 @@
 package com.fitnesstrackerbackend.core.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
@@ -29,14 +27,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader(AUTHORIZATION_HEADER);
 
         if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
@@ -49,14 +45,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String userEmail = jwtService.extractUsername(jwt);
 
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                authenticateUser(request, jwt, userEmail);
+                try {
+                    authenticateUser(request, jwt, userEmail);
+                } catch (Exception e) {
+                    // If user is not found or token is invalid, just ignore it and proceed as
+                    // anonymous
+                    // This is crucial when the database was reset but the browser still has an old
+                    // token
+                    logger.debug("Failed to authenticate with token: " + e.getMessage());
+                }
             }
-
-            filterChain.doFilter(request, response);
-
-        } catch (JwtException e) {
-            handlerExceptionResolver.resolveException(request, response, null, e);
+        } catch (Exception e) {
+            logger.debug("Token parsing failed: " + e.getMessage());
         }
+
+        filterChain.doFilter(request, response);
     }
 
     private void authenticateUser(HttpServletRequest request, String jwt, String userEmail) {
@@ -66,8 +69,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
-                    userDetails.getAuthorities()
-            );
+                    userDetails.getAuthorities());
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authToken);

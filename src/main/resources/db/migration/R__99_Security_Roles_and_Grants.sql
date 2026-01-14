@@ -171,7 +171,12 @@ GRANT EXECUTE ON FUNCTION fn_create_user_profile() TO auth_role;
 GRANT SELECT ON login_credential TO auth_role;
 GRANT SELECT ON "user" TO auth_role;
 GRANT SELECT ON gym TO auth_role;
-GRANT SELECT ON address to auth_role;
+GRANT SELECT ON address TO auth_role;
+GRANT SELECT ON gym_phone_number TO auth_role;
+GRANT SELECT ON membership TO auth_role;
+GRANT SELECT, INSERT ON trainee_info TO auth_role;
+GRANT SELECT, INSERT ON trainer_info TO auth_role;
+GRANT SELECT, INSERT ON admin_info TO auth_role;
 
 GRANT INSERT ON "user" TO auth_role;
 GRANT INSERT ON login_credential TO auth_role;

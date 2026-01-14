@@ -4,4 +4,5 @@ import com.fitnesstrackerbackend.domain.trainingplan.model.ExerciseTemplateEntit
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ExerciseRepository extends JpaRepository<ExerciseTemplateEntity, Long> {
+    java.util.Optional<ExerciseTemplateEntity> findByName(String name);
 }

@@ -11,6 +11,7 @@ import com.fitnesstrackerbackend.domain.user.model.UserType;
 import com.fitnesstrackerbackend.domain.user.repository.TraineeInfoRepository;
 import com.fitnesstrackerbackend.domain.user.repository.TrainerTraineeViewRepository;
 import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
+import com.fitnesstrackerbackend.domain.user.repository.MembershipRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 
 @Service
 @RequiredArgsConstructor

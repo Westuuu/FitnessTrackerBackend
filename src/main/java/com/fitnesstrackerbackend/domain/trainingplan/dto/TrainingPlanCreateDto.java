@@ -2,19 +2,14 @@ package com.fitnesstrackerbackend.domain.trainingplan.dto;
 
 import com.fitnesstrackerbackend.domain.trainingplan.enums.DifficultyLevel;
 import com.fitnesstrackerbackend.domain.trainingplan.enums.VisibilityType;
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import java.time.Instant;
-
-@Builder
-public record TrainingPlanDto(
-                Long id,
-                String name,
+public record TrainingPlanCreateDto(
+                @NotNull @Size(max = 255) String name,
                 String description,
                 DifficultyLevel difficultyLevel,
-                Integer durationWeeks,
-                VisibilityType visibilityType,
-                Instant createdAt,
-                Instant updatedAt,
+                @NotNull Integer durationWeeks,
+                @NotNull VisibilityType visibilityType,
                 java.util.List<WorkoutDayDto> workoutDays) {
 }

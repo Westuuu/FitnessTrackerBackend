@@ -10,18 +10,19 @@ import org.springframework.stereotype.Component;
 @Component
 class GymMapper {
     public GymEntity mapToGymEntity(GymCreationRequestDto gymCreationRequestDto) {
-       GymEntity gym = GymEntity.builder()
+        GymEntity gym = GymEntity.builder()
                 .name(gymCreationRequestDto.name())
                 .email(gymCreationRequestDto.email())
                 .build();
 
-       AddressEntity address = AddressEntity.builder()
+        AddressEntity address = AddressEntity.builder()
                 .country(gymCreationRequestDto.country())
                 .city(gymCreationRequestDto.city())
                 .postCode(gymCreationRequestDto.postCode())
                 .street(gymCreationRequestDto.street())
                 .streetNumber(gymCreationRequestDto.streetNumber())
-                .apartmentNumber(gymCreationRequestDto.apartmentNumber() != null ? gymCreationRequestDto.apartmentNumber() : "")
+                .apartmentNumber(
+                        gymCreationRequestDto.apartmentNumber() != null ? gymCreationRequestDto.apartmentNumber() : "")
                 .gym(gym)
                 .build();
 
@@ -34,24 +35,23 @@ class GymMapper {
                 savedGym.getId(),
                 savedGym.getName(),
                 savedGym.getEmail(),
-                savedGym.getCreatedAt()
-        );
+                savedGym.getCreatedAt());
     }
 
     public GymResponseDto mapToGymResponseDto(GymEntity gym) {
+        AddressEntity address = gym.getAddress();
         return new GymResponseDto(
                 gym.getId(),
                 gym.getName(),
                 gym.getEmail(),
-                gym.getAddress().getCountry(),
-                gym.getAddress().getCity(),
-                gym.getAddress().getStreet(),
-                gym.getAddress().getStreetNumber(),
-                gym.getAddress().getApartmentNumber(),
+                address != null ? address.getCountry() : null,
+                address != null ? address.getCity() : null,
+                address != null ? address.getStreet() : null,
+                address != null ? address.getStreetNumber() : null,
+                address != null ? address.getApartmentNumber() : null,
                 gym.getGymPhoneNumbers().stream()
                         .map(phone -> phone.getCountryPrefix() + phone.getId().getPhoneNumber())
-                        .toList()
-        );
+                        .toList());
 
     }
 }

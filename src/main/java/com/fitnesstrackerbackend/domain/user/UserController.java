@@ -24,23 +24,20 @@ public class UserController {
     @GetMapping("/{userID}")
     @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userID")
     public ResponseEntity<UserProfileDto> getUserProfile(
-            @PathVariable Long userID
-    ) {
+            @PathVariable Long userID) {
         return ResponseEntity.ok(userService.getUserProfile(userID));
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileDto> getProfile(
-            @AuthenticationPrincipal AppUserDetails userDetails
-    ) {
+            @AuthenticationPrincipal AppUserDetails userDetails) {
         return ResponseEntity.ok(userService.getCurrentUserProfile(userDetails.getId()));
     }
 
     @GetMapping("/trainees")
     @PreAuthorize("hasRole('TRAINER')")
     public ResponseEntity<List<TraineeOverviewDto>> getTrainerTrainees(
-            @AuthenticationPrincipal AppUserDetails userDetails
-    ) {
+            @AuthenticationPrincipal AppUserDetails userDetails) {
         return ResponseEntity.ok(userService.getTrainerTrainees(userDetails.getId()));
     }
 
@@ -48,8 +45,7 @@ public class UserController {
     @PreAuthorize("hasRole('TRAINER')")
     public ResponseEntity<TrainerAssigmentResponseDto> assignTrainerToTrainee(
             @PathVariable Long trainerId,
-            @RequestBody Long traineeId
-    ) {
+            @RequestBody Long traineeId) {
         return ResponseEntity.ok(userService.assignTrainerToTrainee(trainerId, traineeId));
     }
 }

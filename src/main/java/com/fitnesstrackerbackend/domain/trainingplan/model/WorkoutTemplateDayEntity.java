@@ -9,8 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "workout_template_day", indexes = {@Index(name = "idx_workout_template_day_plan",
-        columnList = "training_planid")})
+@Table(name = "workout_template_day", indexes = {
+        @Index(name = "idx_workout_template_day_plan", columnList = "training_planid") })
 public class WorkoutTemplateDayEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +34,6 @@ public class WorkoutTemplateDayEntity {
     @Column(name = "notes", length = Integer.MAX_VALUE)
     private String notes;
 
-
+    @OneToMany(mappedBy = "workoutTemplateid", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<WorkoutTemplateExerciseEntity> exercises = new java.util.ArrayList<>();
 }

@@ -17,61 +17,62 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "goal", indexes = {
-        @Index(name = "idx_goal_user_status",
-                columnList = "userid, status"),
-        @Index(name = "idx_goal_exercise_template",
-                columnList = "exercise_templateid")})
+                @Index(name = "idx_goal_user_status", columnList = "userid, status"),
+                @Index(name = "idx_goal_exercise_template", columnList = "exercise_templateid") })
 public class GoalEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id", nullable = false)
+        private Integer id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "userid", nullable = false)
-    private UserEntity userid;
+        @NotNull
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @JoinColumn(name = "userid", nullable = false)
+        private UserEntity userid;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "exercise_templateid", nullable = false)
-    private ExerciseTemplateEntity exerciseTemplateidEntity;
+        @NotNull
+        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @JoinColumn(name = "exercise_templateid", nullable = false)
+        private ExerciseTemplateEntity exerciseTemplateidEntity;
 
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "title", nullable = false)
-    private String title;
+        @Size(max = 255)
+        @NotNull
+        @Column(name = "title", nullable = false)
+        private String title;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
-    private String description;
+        @Column(name = "description", length = Integer.MAX_VALUE)
+        private String description;
 
-    @NotNull
-    @Column(name = "target_value", nullable = false, precision = 10, scale = 2)
-    private BigDecimal targetValue;
+        @NotNull
+        @Column(name = "target_value", nullable = false, precision = 10, scale = 2)
+        private BigDecimal targetValue;
 
-    @NotNull
-    @ColumnDefault("CURRENT_DATE")
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+        @NotNull
+        @Column(name = "current_value", nullable = false, precision = 10, scale = 2)
+        private BigDecimal currentValue;
 
-    @NotNull
-    @Column(name = "target_date", nullable = false)
-    private LocalDate targetDate;
+        @NotNull
+        @ColumnDefault("CURRENT_DATE")
+        @Column(name = "start_date", nullable = false)
+        private LocalDate startDate;
 
-    @Size(max = 20)
-    @NotNull
-    @Column(name = "status", nullable = false, length = 20)
-    private String status;
+        @NotNull
+        @Column(name = "target_date", nullable = false)
+        private LocalDate targetDate;
 
-    @NotNull
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+        @Size(max = 20)
+        @NotNull
+        @Column(name = "status", nullable = false, length = 20)
+        private String status;
 
-    @NotNull
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
+        @NotNull
+        @ColumnDefault("CURRENT_TIMESTAMP")
+        @Column(name = "created_at", nullable = false)
+        private Instant createdAt;
 
+        @NotNull
+        @ColumnDefault("CURRENT_TIMESTAMP")
+        @Column(name = "updated_at", nullable = false)
+        private Instant updatedAt;
 
 }

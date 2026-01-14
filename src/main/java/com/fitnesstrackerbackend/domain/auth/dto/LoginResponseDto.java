@@ -7,21 +7,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Builder
-public record LoginResponseDto (
-        String token,
+public record LoginResponseDto(
+                String token,
 
-        String tokenType,
+                String tokenType,
 
-        Long userId,
+                Long userId,
 
-        String email,
+                String email,
 
-        String firstName,
+                String firstName,
 
-        String lastName,
+                String lastName,
 
-        UserType userType,
-
-        Long expiresIn
-) {
+                UserType userType,
+                Long gymId,
+                boolean isApproved,
+                Long expiresIn) {
 }

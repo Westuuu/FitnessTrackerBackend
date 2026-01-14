@@ -20,13 +20,15 @@ public class DatabaseRoutingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
             UserType userType = determineDbRole(authentication.getAuthorities());
-            DatabaseContextHolder.setRole(userType);
+            if (userType != null) {
+                DatabaseContextHolder.setRole(userType);
+            }
         }
 
         try {
@@ -40,10 +42,14 @@ public class DatabaseRoutingFilter extends OncePerRequestFilter {
     private UserType determineDbRole(Collection<? extends GrantedAuthority> authorities) {
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
-            if ("ROLE_ADMIN".equals(role)) return UserType.ADMIN;
-            if ("ROLE_TRAINER".equals(role)) return UserType.TRAINER;
+            if ("ROLE_ADMIN".equals(role))
+                return UserType.ADMIN;
+            if ("ROLE_TRAINER".equals(role))
+                return UserType.TRAINER;
+            if ("ROLE_TRAINEE".equals(role))
+                return UserType.TRAINEE;
         }
 
-        return UserType.TRAINEE;
+        return null;
     }
 }

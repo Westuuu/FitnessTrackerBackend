@@ -55,5 +55,6 @@ public class TrainingPlanEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-
+    @OneToMany(mappedBy = "trainingPlanidEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<WorkoutTemplateDayEntity> workoutDays = new java.util.ArrayList<>();
 }

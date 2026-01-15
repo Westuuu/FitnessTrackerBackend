@@ -31,7 +31,6 @@ public class TrainingPlanEntity {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Size(max = 20)
     @Column(name = "difficulty_level", length = 20)
     private DifficultyLevel difficultyLevel;
 
@@ -40,7 +39,6 @@ public class TrainingPlanEntity {
     private Integer durationWeeks;
 
     @Enumerated(EnumType.STRING)
-    @Size(max = 20)
     @NotNull
     @Column(name = "visibility_type", nullable = false, length = 20)
     private VisibilityType visibilityType;

@@ -136,12 +136,12 @@ GRANT SELECT ON gym_phone_number TO trainee_role;
 GRANT SELECT ON membership TO trainee_role;
 GRANT SELECT ON exercise_template TO trainee_role;
 
-GRANT SELECT ON training_plan TO trainee_role;
-GRANT SELECT ON training_plan_role TO trainee_role;
-GRANT SELECT ON workout_template_day TO trainee_role;
-GRANT SELECT ON workout_template_exercise TO trainee_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON training_plan TO trainee_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON training_plan_role TO trainee_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON workout_template_day TO trainee_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON workout_template_exercise TO trainee_role;
 
-GRANT SELECT ON user_training_plan TO trainee_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON user_training_plan TO trainee_role;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON workout_session TO trainee_role;
 GRANT SELECT, INSERT, UPDATE, DELETE ON user_workout_exercise TO trainee_role;

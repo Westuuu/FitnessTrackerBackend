@@ -6,6 +6,7 @@ import com.fitnesstrackerbackend.domain.goal.dto.GoalCreateDto;
 import com.fitnesstrackerbackend.domain.goal.dto.GoalDto;
 import com.fitnesstrackerbackend.domain.goal.model.GoalEntity;
 import com.fitnesstrackerbackend.domain.goal.repositories.GoalRepository;
+import com.fitnesstrackerbackend.domain.session.repositories.ExerciseInstanceSetRepository;
 import com.fitnesstrackerbackend.domain.trainingplan.model.ExerciseTemplateEntity;
 import com.fitnesstrackerbackend.domain.trainingplan.repositories.ExerciseRepository;
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
@@ -27,11 +29,34 @@ public class GoalService {
     private final GoalRepository goalRepository;
     private final ExerciseRepository exerciseRepository;
     private final UserRepository userRepository;
+    private final ExerciseInstanceSetRepository exerciseInstanceSetRepository;
 
-
+    @Transactional
     public List<GoalDto> getGoalsByUserId(Long userId) {
         return goalRepository.findByUserid_Id(userId).stream()
-                .map(this::mapToDto)
+                .map(goal -> {
+                    // Fetch the maximum weight achieved for this exercise
+                    BigDecimal maxWeight = exerciseInstanceSetRepository
+                            .findMaxWeightForExerciseByUser(
+                                    goal.getExerciseTemplateidEntity().getId(),
+                                    userId)
+                            .orElse(BigDecimal.ZERO);
+
+                    // Update the current value if it has changed
+                    if (!goal.getCurrentValue().equals(maxWeight)) {
+                        goal.setCurrentValue(maxWeight);
+                        goal.setUpdatedAt(Instant.now());
+
+                        // Check if goal is achieved
+                        if (maxWeight.compareTo(goal.getTargetValue()) >= 0) {
+                            goal.setStatus("ACHIEVED");
+                        }
+
+                        goalRepository.save(goal);
+                    }
+
+                    return mapToDto(goal);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -64,7 +89,7 @@ public class GoalService {
         GoalEntity goal = goalRepository.findById(goalId)
                 .orElseThrow(() -> new ResourceNotFoundException("Goal not found"));
 
-//        TODO: fix this
+        // TODO: fix this
         if (!goal.getUserid().getId().equals(userId)) {
             throw new BusinessLogicException("Not authorized to delete this goal");
         }

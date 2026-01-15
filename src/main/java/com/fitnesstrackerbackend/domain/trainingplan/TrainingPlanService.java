@@ -121,10 +121,10 @@ public class TrainingPlanService {
     }
 
     @Transactional(readOnly = true)
-    public TrainingPlanSummaryDto getTrainingPlanById(Long trainingPlanId, Long userId) {
+    public TrainingPlanDto getTrainingPlanById(Long trainingPlanId, Long userId) {
         TrainingPlanEntity trainingPlan = trainingPlanRepository.findAccessibleById(trainingPlanId, userId)
                 .orElseThrow(() -> new TrainingPlanNotFoundException(trainingPlanId));
 
-        return trainingPlanMapper.mapToSummaryDto(trainingPlan);
+        return trainingPlanMapper.mapToDto(trainingPlan);
     }
 }

@@ -55,7 +55,7 @@ public class TrainingPlanController {
     }
 
     @GetMapping("/{trainingPlanId}")
-    public ResponseEntity<TrainingPlanSummaryDto> getTrainingPlanById(
+    public ResponseEntity<TrainingPlanDto> getTrainingPlanById(
             @PathVariable Long trainingPlanId,
             @AuthenticationPrincipal AppUserDetails userDetails) {
         return ResponseEntity.ok(trainingPlanService.getTrainingPlanById(trainingPlanId, userDetails.getId()));

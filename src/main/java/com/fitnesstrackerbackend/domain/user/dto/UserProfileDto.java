@@ -15,6 +15,7 @@ public class UserProfileDto {
     private String firstName;
     private String lastName;
     private UserType userType;
+    private Long gymId;
     private LocalDate dateOfBirth;
 
     // Specific to trainee - null if userType != trainee

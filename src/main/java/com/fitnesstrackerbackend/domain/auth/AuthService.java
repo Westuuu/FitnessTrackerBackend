@@ -9,8 +9,10 @@ import com.fitnesstrackerbackend.domain.gym.GymRepository;
 import com.fitnesstrackerbackend.domain.gym.model.GymEntity;
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
 import com.fitnesstrackerbackend.domain.user.model.UserType;
-import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
+import com.fitnesstrackerbackend.domain.user.model.TrainerInfoEntity;
 import com.fitnesstrackerbackend.domain.user.repository.MembershipRepository;
+import com.fitnesstrackerbackend.domain.user.repository.TrainerInfoRepository;
+import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +26,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
+@lombok.extern.slf4j.Slf4j
 public class AuthService {
 
         private final UserRepository userRepository;
@@ -36,6 +41,7 @@ public class AuthService {
         private final AuthenticationManager authenticationManager;
         private final GymRepository gymRepository;
         private final MembershipRepository membershipRepository;
+        private final TrainerInfoRepository trainerInfoRepository;
 
         @Value("${jwt.expiration}")
         private Long jwtExpiration;
@@ -153,5 +159,69 @@ public class AuthService {
                                 .userType(user.getUserType())
                                 .gymId(user.getGym().getId())
                                 .build();
+        }
+
+        @Transactional
+        public TrainerRegistrationResponseDto registerTrainer(@Valid TrainerRegistrationDto registrationDto,
+                        Long adminGymId) {
+                log.info("Registering trainer: {} with gymId: {}", registrationDto.email(), adminGymId);
+                try {
+                        if (loginCredentialRepository.existsByEmail(registrationDto.email())) {
+                                log.warn("Trainer registration failed: Email {} already exists",
+                                                registrationDto.email());
+                                throw new UserAlreadyExistsException(registrationDto.email());
+                        }
+
+                        GymEntity gym = gymRepository.findById(adminGymId)
+                                        .orElseThrow(() -> new ResourceNotFoundException(
+                                                        "Gym with id " + adminGymId + " does not exist"));
+
+                        UserEntity user = UserEntity.builder()
+                                        .firstName(registrationDto.firstName())
+                                        .middleName(registrationDto.middleName())
+                                        .lastName(registrationDto.lastName())
+                                        .dateOfBirth(registrationDto.dateOfBirth())
+                                        .sex(registrationDto.sex())
+                                        .userType(UserType.TRAINER)
+                                        .gym(gym)
+                                        .build();
+
+                        LoginCredentialEntity loginCredential = LoginCredentialEntity.builder()
+                                        .email(registrationDto.email())
+                                        .passwordHash(passwordEncoder.encode(registrationDto.password()))
+                                        .user(user)
+                                        .build();
+
+                        log.debug("Saving user and credentials for trainer: {}", registrationDto.email());
+                        userRepository.save(user);
+                        loginCredentialRepository.save(loginCredential);
+
+                        // Initialize TrainerInfo
+                        log.debug("Initializing TrainerInfo for trainerId: {}", user.getId());
+                        if (trainerInfoRepository.existsById(user.getId())) {
+                                log.warn("TrainerInfo already exists for user {}. Deleting orphan record.",
+                                                user.getId());
+                                trainerInfoRepository.deleteById(user.getId());
+                                trainerInfoRepository.flush();
+                        }
+
+                        TrainerInfoEntity trainerInfo = new TrainerInfoEntity();
+                        trainerInfo.setUser(user);
+                        trainerInfo.setHireDate(LocalDate.now());
+                        trainerInfo.setIsActive(true);
+                        trainerInfoRepository.save(trainerInfo);
+
+                        log.info("Trainer registered successfully: {}", registrationDto.email());
+                        return TrainerRegistrationResponseDto.builder()
+                                        .userId(user.getId())
+                                        .firstName(user.getFirstName())
+                                        .lastName(user.getLastName())
+                                        .email(loginCredential.getEmail())
+                                        .userType(user.getUserType())
+                                        .build();
+                } catch (Exception e) {
+                        log.error("Error during trainer registration for email: " + registrationDto.email(), e);
+                        throw e;
+                }
         }
 }

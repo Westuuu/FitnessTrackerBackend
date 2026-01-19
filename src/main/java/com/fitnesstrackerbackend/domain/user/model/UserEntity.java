@@ -50,16 +50,16 @@ public class UserEntity {
     @Column(name = "sex", nullable = false)
     private Sex sex;
 
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private LoginCredentialEntity loginCredential;
-//
-//    @OneToOne(mappedBy = "user")
-//    private TraineeInfoEntity traineeInfo;
-//
-//    @OneToOne(mappedBy = "user")
-//    private TrainerInfoEntity trainerInfo;
-//
-//    @OneToOne(mappedBy = "user")
-//    private AdminInfoEntity adminInfo;
+    // @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private LoginCredentialEntity loginCredential;
+    //
+    // @OneToOne(mappedBy = "user")
+    // private TraineeInfoEntity traineeInfo;
+    //
+    // @OneToOne(mappedBy = "user")
+    // private TrainerInfoEntity trainerInfo;
+    //
+    // @OneToOne(mappedBy = "user")
+    // private AdminInfoEntity adminInfo;
 
 }

@@ -1,6 +1,9 @@
 package com.fitnesstrackerbackend.domain.user;
 
 import com.fitnesstrackerbackend.core.security.AppUserDetails;
+import com.fitnesstrackerbackend.domain.auth.AuthService;
+import com.fitnesstrackerbackend.domain.auth.dto.TrainerRegistrationDto;
+import com.fitnesstrackerbackend.domain.auth.dto.TrainerRegistrationResponseDto;
 import com.fitnesstrackerbackend.domain.user.dto.TraineeOverviewDto;
 import com.fitnesstrackerbackend.domain.user.dto.TrainerAssigmentResponseDto;
 import com.fitnesstrackerbackend.domain.user.dto.UserProfileDto;
@@ -20,6 +23,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthService authService;
 
     @GetMapping("/{userID}")
     @PreAuthorize("hasRole('ADMIN') or authentication.principal.id == #userID")
@@ -70,6 +74,16 @@ public class UserController {
     public ResponseEntity<Void> approveUser(@PathVariable Long userId) {
         userService.approveUser(userId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/trainers")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<TrainerRegistrationResponseDto> registerTrainer(
+            @AuthenticationPrincipal AppUserDetails adminDetails,
+            @RequestBody TrainerRegistrationDto registrationDto) {
+        // We use the admin's gymId as the context for the new trainer
+        UserProfileDto adminProfile = userService.getUserProfile(adminDetails.getId());
+        return ResponseEntity.status(201).body(authService.registerTrainer(registrationDto, adminProfile.getGymId()));
     }
 
 }

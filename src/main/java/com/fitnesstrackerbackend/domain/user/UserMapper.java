@@ -18,6 +18,7 @@ public class UserMapper {
                                 .firstName(user.getFirstName())
                                 .lastName(user.getLastName())
                                 .userType(user.getUserType())
+                                .gymId(user.getGym() != null ? user.getGym().getId() : null)
                                 .dateOfBirth(user.getDateOfBirth());
 
                 return builder.build();

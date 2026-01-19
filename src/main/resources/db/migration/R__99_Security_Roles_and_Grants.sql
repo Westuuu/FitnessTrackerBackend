@@ -182,3 +182,4 @@ GRANT INSERT ON "user" TO auth_role;
 GRANT INSERT ON login_credential TO auth_role;
 
 
+-- Force rerun

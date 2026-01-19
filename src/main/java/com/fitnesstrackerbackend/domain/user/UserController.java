@@ -49,6 +49,15 @@ public class UserController {
         return ResponseEntity.ok(userService.assignTrainerToTrainee(trainerId, request.traineeId()));
     }
 
+    @DeleteMapping("/{trainerId}/trainees/{traineeId}")
+    @PreAuthorize("hasRole('TRAINER')")
+    public ResponseEntity<Void> removeTrainerFromTrainee(
+            @PathVariable Long trainerId,
+            @PathVariable Long traineeId) {
+        userService.removeTrainerFromTrainee(trainerId, traineeId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/gym/{gymId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
     public ResponseEntity<List<com.fitnesstrackerbackend.domain.user.dto.GymUserDto>> getGymUsers(

@@ -1,6 +1,5 @@
 package com.fitnesstrackerbackend.domain.user.model;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -47,4 +46,10 @@ public class TrainerTraineeView {
 
     @Column(name = "last_session_date")
     private LocalDate lastSessionDate;
+
+    @Column(name = "completed_sessions")
+    private Long completedSessions;
+
+    @Column(name = "plan_duration_weeks")
+    private Integer planDurationWeeks;
 }

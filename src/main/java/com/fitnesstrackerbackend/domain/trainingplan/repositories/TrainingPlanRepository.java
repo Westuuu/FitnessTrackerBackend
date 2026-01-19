@@ -38,4 +38,22 @@ public interface TrainingPlanRepository extends JpaRepository<TrainingPlanEntity
   Optional<TrainingPlanEntity> findAccessibleById(
       @Param("trainingPlanId") Long trainingPlanId,
       @Param("userId") Long userId);
+
+  @Query("""
+      SELECT tp FROM TrainingPlanEntity tp
+      JOIN TrainingPlanRoleEntity tpr ON tp.id = tpr.trainingPlan.id
+      WHERE tpr.userid.id = :userId
+        AND tpr.role = 'OWNER'
+      ORDER BY tp.createdAt DESC
+      """)
+  List<TrainingPlanEntity> findCreatedPlans(@Param("userId") Long userId);
+
+  @Query("""
+      SELECT COUNT(tp) > 0 FROM TrainingPlanEntity tp
+      JOIN TrainingPlanRoleEntity tpr ON tp.id = tpr.trainingPlan.id
+      WHERE tp.id = :planId
+        AND tpr.userid.id = :userId
+        AND tpr.role = 'OWNER'
+      """)
+  boolean existsByIdAndCreatedBy(@Param("planId") Long planId, @Param("userId") Long userId);
 }

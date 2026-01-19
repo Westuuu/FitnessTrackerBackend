@@ -32,6 +32,8 @@ public class UserMapper {
                                 .activePlanName(view.getActivePlanName())
                                 .membershipStatus(view.getMembershipStatus())
                                 .lastSessionDate(view.getLastSessionDate())
+                                .completedSessions(view.getCompletedSessions())
+                                .planDurationWeeks(view.getPlanDurationWeeks())
                                 .build();
         }
 }

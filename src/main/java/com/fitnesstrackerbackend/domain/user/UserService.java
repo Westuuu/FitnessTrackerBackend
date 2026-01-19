@@ -71,6 +71,21 @@ public class UserService {
 
     }
 
+    @Transactional
+    public void removeTrainerFromTrainee(Long trainerId, Long traineeId) {
+        TraineeInfoEntity traineeInfo = traineeInfoRepository.findById(traineeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Trainee not found: " + traineeId));
+
+        // Verify the trainee is actually assigned to this trainer (optional but good
+        // for security)
+        if (traineeInfo.getTrainer() != null && traineeInfo.getTrainer().getId().equals(trainerId)) {
+            traineeInfo.setTrainer(null);
+            traineeInfoRepository.save(traineeInfo);
+        } else if (traineeInfo.getTrainer() != null) {
+            throw new IllegalStateException("Trainee is assigned to a different trainer");
+        }
+    }
+
     @Transactional(readOnly = true)
     public List<GymUserDto> getGymUsers(Long gymId) {
         return userRepository.findAllByGymId(gymId).stream()

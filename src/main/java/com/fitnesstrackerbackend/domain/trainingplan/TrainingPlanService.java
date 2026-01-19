@@ -96,10 +96,27 @@ public class TrainingPlanService {
         return trainingPlanMapper.mapToUserPlanDto(userTrainingPlanRepository.save(userPlan));
     }
 
+    @Transactional
+    public com.fitnesstrackerbackend.domain.trainingplan.dto.UserTrainingPlanDto assignTrainerPlanToTrainee(
+            Long trainerId, Long traineeId, Long planId) {
+        if (!trainingPlanRepository.existsByIdAndCreatedBy(planId, trainerId)) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "You can only assign plans you created.");
+        }
+        return assignPlanToUser(traineeId, planId);
+    }
+
     @Transactional(readOnly = true)
     public List<com.fitnesstrackerbackend.domain.trainingplan.dto.UserTrainingPlanDto> getMyTrainingPlans(Long userId) {
         return userTrainingPlanRepository.findByUserid_Id(userId).stream()
                 .map(trainingPlanMapper::mapToUserPlanDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TrainingPlanDto> getCreatedPlans(Long userId) {
+        return trainingPlanRepository.findCreatedPlans(userId).stream()
+                .map(trainingPlanMapper::mapToDto)
                 .toList();
     }
 

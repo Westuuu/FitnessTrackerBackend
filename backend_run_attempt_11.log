@@ -1,0 +1,81 @@
+nohup: ignoring input
+> Task :compileJava
+> Task :processResources UP-TO-DATE
+> Task :classes
+> Task :resolveMainClassName
+
+> Task :bootRun
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-01-15T01:11:30.228+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] c.f.FitnessTrackerBackendApplication     : Starting FitnessTrackerBackendApplication using Java 25.0.1 with PID 113406 (/home/comprex/FitnessApp/FitnessTrackerBackend/build/classes/java/main started by comprex in /home/comprex/FitnessApp/FitnessTrackerBackend)
+2026-01-15T01:11:30.233+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] c.f.FitnessTrackerBackendApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-15T01:11:30.281+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-01-15T01:11:30.281+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-01-15T01:11:31.353+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-15T01:11:31.478+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 116 ms. Found 18 JPA repository interfaces.
+2026-01-15T01:11:32.185+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-01-15T01:11:32.199+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-15T01:11:32.199+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-01-15T01:11:32.230+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1947 ms
+2026-01-15T01:11:32.780+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/fitness_tracker?currentSchema=fitnesstracker (PostgreSQL 18.1)
+2026-01-15T01:11:32.856+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 25 migrations (execution time 00:00.040s)
+2026-01-15T01:11:32.885+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "fitnesstracker": 3
+2026-01-15T01:11:32.888+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema "fitnesstracker" is up to date. No migration necessary.
+2026-01-15T01:11:32.952+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-01-15T01:11:32.995+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.0.Final
+2026-01-15T01:11:33.371+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-15T01:11:33.396+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-15T01:11:33.420+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@20f8c3c6
+2026-01-15T01:11:33.421+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-15T01:11:33.448+01:00  WARN 113406 --- [FitnessTrackerBackend] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-15T01:11:33.467+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/fitness_tracker?currentSchema=fitnesstracker]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 18.1
+	Default catalog/schema: fitness_tracker/fitnesstracker
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-15T01:11:34.584+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-15T01:11:34.624+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-15T01:11:34.685+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-15T01:11:35.459+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-01-15T01:11:35.459+01:00  WARN 113406 --- [FitnessTrackerBackend] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-01-15T01:11:36.594+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-01-15T01:11:36.673+01:00  WARN 113406 --- [FitnessTrackerBackend] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-01-15T01:11:36.679+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-15T01:11:36.682+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-01-15T01:11:36.684+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-01-15T01:11:36.698+01:00  INFO 113406 --- [FitnessTrackerBackend] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-01-15T01:11:36.710+01:00 ERROR 113406 --- [FitnessTrackerBackend] [  restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+
+BUILD SUCCESSFUL in 9s
+4 actionable tasks: 3 executed, 1 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.2.1/userguide/configuration_cache_enabling.html

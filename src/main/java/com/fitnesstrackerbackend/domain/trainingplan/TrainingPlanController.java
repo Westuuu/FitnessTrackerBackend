@@ -45,6 +45,16 @@ public class TrainingPlanController {
                 .body(trainingPlanService.assignPlanToUser(userDetails.getId(), trainingPlanId));
     }
 
+    @PostMapping("/{trainingPlanId}/assign/{userId}")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('TRAINER')")
+    public ResponseEntity<UserTrainingPlanDto> assignPlanToTrainee(
+            @PathVariable Long trainingPlanId,
+            @PathVariable Long userId,
+            @AuthenticationPrincipal AppUserDetails userDetails) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(trainingPlanService.assignPlanToUser(userId, trainingPlanId));
+    }
+
     @GetMapping
     public ResponseEntity<List<TrainingPlanSummaryDto>> getAllTrainingPlans(
             @RequestParam(required = false) VisibilityType visibilityType,

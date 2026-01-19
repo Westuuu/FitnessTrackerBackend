@@ -45,7 +45,22 @@ public class UserController {
     @PreAuthorize("hasRole('TRAINER')")
     public ResponseEntity<TrainerAssigmentResponseDto> assignTrainerToTrainee(
             @PathVariable Long trainerId,
-            @RequestBody Long traineeId) {
-        return ResponseEntity.ok(userService.assignTrainerToTrainee(trainerId, traineeId));
+            @RequestBody com.fitnesstrackerbackend.domain.user.dto.AssignTraineeRequest request) {
+        return ResponseEntity.ok(userService.assignTrainerToTrainee(trainerId, request.traineeId()));
     }
+
+    @GetMapping("/gym/{gymId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TRAINER')")
+    public ResponseEntity<List<com.fitnesstrackerbackend.domain.user.dto.GymUserDto>> getGymUsers(
+            @PathVariable Long gymId) {
+        return ResponseEntity.ok(userService.getGymUsers(gymId));
+    }
+
+    @PostMapping("/{userId}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> approveUser(@PathVariable Long userId) {
+        userService.approveUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
 }

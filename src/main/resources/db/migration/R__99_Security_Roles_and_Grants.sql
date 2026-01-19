@@ -81,7 +81,7 @@ GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA fitnesstracker TO trainer_role;
 GRANT SELECT ON "user" TO trainer_role;
 GRANT SELECT ON login_credential TO trainer_role;
 GRANT SELECT, UPDATE ON trainer_info TO trainer_role;
-GRANT SELECT ON trainee_info TO trainer_role;
+GRANT SELECT, UPDATE ON trainee_info TO trainer_role;
 GRANT SELECT ON user_phone_number TO trainer_role;
 GRANT SELECT ON body_metrics TO trainer_role;
 

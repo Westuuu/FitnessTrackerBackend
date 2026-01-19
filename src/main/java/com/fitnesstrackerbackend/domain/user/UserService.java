@@ -1,25 +1,27 @@
 package com.fitnesstrackerbackend.domain.user;
 
-import com.fitnesstrackerbackend.core.database.DatabaseContextHolder;
 import com.fitnesstrackerbackend.core.exception.ResourceNotFoundException;
+import com.fitnesstrackerbackend.domain.auth.LoginCredentialRepository;
+import com.fitnesstrackerbackend.domain.user.dto.GymUserDto;
 import com.fitnesstrackerbackend.domain.user.dto.TraineeOverviewDto;
 import com.fitnesstrackerbackend.domain.user.dto.TrainerAssigmentResponseDto;
 import com.fitnesstrackerbackend.domain.user.dto.UserProfileDto;
+import com.fitnesstrackerbackend.domain.user.model.MembershipEntity;
 import com.fitnesstrackerbackend.domain.user.model.TraineeInfoEntity;
 import com.fitnesstrackerbackend.domain.user.model.UserEntity;
 import com.fitnesstrackerbackend.domain.user.model.UserType;
+import com.fitnesstrackerbackend.domain.user.repository.MembershipRepository;
 import com.fitnesstrackerbackend.domain.user.repository.TraineeInfoRepository;
 import com.fitnesstrackerbackend.domain.user.repository.TrainerTraineeViewRepository;
 import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
-import com.fitnesstrackerbackend.domain.user.repository.MembershipRepository;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,8 @@ public class UserService {
     private final UserMapper userMapper;
     private final TrainerTraineeViewRepository trainerTraineeViewRepository;
     private final TraineeInfoRepository traineeInfoRepository;
+    private final MembershipRepository membershipRepository;
+    private final LoginCredentialRepository loginCredentialRepository;
 
     @Transactional(readOnly = true)
     public UserProfileDto getUserProfile(Long userID) {
@@ -65,5 +69,67 @@ public class UserService {
 
         return new TrainerAssigmentResponseDto(trainerId, traineeId, LocalDateTime.now());
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<GymUserDto> getGymUsers(Long gymId) {
+        return userRepository.findAllByGymId(gymId).stream()
+                .map(user -> {
+                    String membershipStatus = "PENDING";
+                    boolean isApproved = false;
+
+                    if (user.getUserType() == UserType.TRAINEE) {
+                        membershipStatus = membershipRepository.findActiveByTraineeId(user.getId())
+                                .map(MembershipEntity::getMembershipStatus)
+                                .orElse("PENDING");
+                        isApproved = "ACTIVE".equalsIgnoreCase(membershipStatus);
+                    } else if (user.getUserType() == UserType.TRAINER) {
+                        isApproved = true;
+                        membershipStatus = "ACTIVE";
+                    }
+
+                    return GymUserDto.builder()
+                            .id(user.getId())
+                            .firstName(user.getFirstName())
+                            .lastName(user.getLastName())
+                            .email(getUsername(user))
+                            .userType(user.getUserType())
+                            .isApproved(isApproved)
+                            .membershipStatus(membershipStatus)
+                            .gymName(user.getGym() != null ? user.getGym().getName() : "Unknown Gym")
+                            .build();
+                })
+                .toList();
+    }
+
+    // Helper to extract email if possible, otherwise null
+    private String getUsername(UserEntity user) {
+        return loginCredentialRepository.findById(user.getId())
+                .map(credential -> credential.getEmail())
+                .orElse("N/A");
+    }
+
+    @Transactional
+    public void approveUser(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (user.getUserType() != UserType.TRAINEE) {
+            return; // Only trainees need approval via membership
+        }
+
+        TraineeInfoEntity traineeInfo = traineeInfoRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Trainee info not found"));
+
+        MembershipEntity membership = membershipRepository.findActiveByTraineeId(userId)
+                .orElse(new MembershipEntity());
+
+        if (membership.getId() == null) {
+            membership.setTraineeInfoid(traineeInfo);
+            membership.setMembershipStartDate(LocalDate.now());
+        }
+
+        membership.setMembershipStatus("ACTIVE");
+        membershipRepository.save(membership);
     }
 }

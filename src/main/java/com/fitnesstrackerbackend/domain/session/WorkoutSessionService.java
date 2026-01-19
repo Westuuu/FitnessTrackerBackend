@@ -99,16 +99,22 @@ public class WorkoutSessionService {
         return getSessionDto(savedSession.getId());
     }
 
+    @Transactional(readOnly = true)
     public WorkoutSessionDto getActiveSession(Long userId) {
         return workoutSessionRepository.findByUserTrainingPlanidEntity_Userid_IdAndCompleted(userId, false)
-                .map(session -> getSessionDto(session.getId()))
+                .map(this::mapToDto)
                 .orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public WorkoutSessionDto getSessionDto(Long sessionId) {
         WorkoutSessionEntity session = workoutSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
+        return mapToDto(session);
+    }
 
+    private WorkoutSessionDto mapToDto(WorkoutSessionEntity session) {
+        Long sessionId = session.getId();
         List<ExerciseInstanceEntity> instances = exerciseInstanceRepository
                 .findByUserWorkoutExerciseidEntity_WorkoutSessionidEntity_Id(sessionId);
 
@@ -239,9 +245,10 @@ public class WorkoutSessionService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<WorkoutSessionDto> getSessionHistory(Long userId) {
         return workoutSessionRepository.findByUserTrainingPlanidEntity_Userid_IdOrderBySessionDateDesc(userId).stream()
-                .map(session -> getSessionDto(session.getId()))
+                .map(this::mapToDto)
                 .collect(java.util.stream.Collectors.toList());
     }
 }

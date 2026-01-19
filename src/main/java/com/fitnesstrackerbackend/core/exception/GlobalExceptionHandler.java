@@ -22,8 +22,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 ex.getMessage(),
                 Instant.now(),
-                request.getDescription(false).replace("uri=", "")
-        );
+                request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
@@ -33,11 +32,9 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 bx.getMessage(),
                 Instant.now(),
-                request.getDescription(false).replace("uri=", "")
-        );
+                request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
-
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ax, WebRequest request) {
@@ -45,8 +42,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.UNAUTHORIZED.value(),
                 "Authentication failed",
                 Instant.now(),
-                request.getDescription(false).replace("uri=", "")
-        );
+                request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
@@ -56,24 +52,24 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN.value(),
                 "Access denied",
                 Instant.now(),
-                request.getDescription(false).replace("uri=", "")
-        );
+                request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException dex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(DataIntegrityViolationException dex,
+            WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 "Record already exists",
                 Instant.now(),
-                request.getDescription(false).replace("uri=", "")
-        );
+                request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex,
+            WebRequest request) {
         String detailedMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining("; "));
@@ -82,20 +78,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation failed: " + detailedMessage,
                 Instant.now(),
-                request.getDescription(false).replace("uri=", "")
-        );
+                request.getDescription(false).replace("uri=", ""));
 
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, WebRequest request) {
+        ex.printStackTrace(); // Log the stack trace for server-side debugging
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Unexpected server error occurred",
+                "Unexpected server error: " + ex.getMessage(),
                 Instant.now(),
-                request.getDescription(false).replace("uri=", "")
-        );
+                request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

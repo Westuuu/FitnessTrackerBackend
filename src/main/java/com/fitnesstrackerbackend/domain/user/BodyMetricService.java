@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class BodyMetricService {
 
     private final BodyMetricRepository bodyMetricRepository;
 
+    @Transactional(readOnly = true)
     public List<BodyMetricDto> getBodyMetricsByUserId(Long userId) {
         return bodyMetricRepository.findById_UseridOrderById_DateAsc(userId).stream()
                 .map(this::mapToDto)

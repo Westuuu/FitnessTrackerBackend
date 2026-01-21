@@ -12,19 +12,37 @@ import java.util.Optional;
 
 @Repository
 public interface ExerciseInstanceSetRepository extends JpaRepository<ExerciseInstanceSetEntity, Long> {
-    List<ExerciseInstanceSetEntity> findByExerciseInstanceidEntity_Id(Long instanceId);
+        List<ExerciseInstanceSetEntity> findByExerciseInstanceidEntity_Id(Long instanceId);
 
-    @Query("""
-            SELECT MAX(eis.weight)
-            FROM ExerciseInstanceSetEntity eis
-            JOIN eis.exerciseInstanceidEntity ei
-            JOIN ei.userWorkoutExerciseidEntity uwe
-            JOIN uwe.workoutSessionidEntity ws
-            WHERE uwe.exerciseTemplateidEntity.id = :exerciseTemplateId
-            AND ws.userTrainingPlanidEntity.userid.id = :userId
-            AND eis.completed = true
-            """)
-    Optional<BigDecimal> findMaxWeightForExerciseByUser(
-            @Param("exerciseTemplateId") Long exerciseTemplateId,
-            @Param("userId") Long userId);
+        @Query("""
+                        SELECT MAX(eis.weight)
+                        FROM ExerciseInstanceSetEntity eis
+                        JOIN eis.exerciseInstanceidEntity ei
+                        JOIN ei.userWorkoutExerciseidEntity uwe
+                        JOIN uwe.workoutSessionidEntity ws
+                        WHERE uwe.exerciseTemplateidEntity.id = :exerciseTemplateId
+                        AND ws.userTrainingPlanidEntity.userid.id = :userId
+                        AND eis.completed = true
+                        """)
+        Optional<BigDecimal> findMaxWeightForExerciseByUser(
+                        @Param("exerciseTemplateId") Long exerciseTemplateId,
+                        @Param("userId") Long userId);
+
+        @Query("""
+                        SELECT ws.sessionDate, MAX(eis.weight)
+                        FROM ExerciseInstanceSetEntity eis
+                        JOIN eis.exerciseInstanceidEntity ei
+                        JOIN ei.userWorkoutExerciseidEntity uwe
+                        JOIN uwe.workoutSessionidEntity ws
+                        WHERE uwe.exerciseTemplateidEntity.name = :exerciseName
+                        AND ws.userTrainingPlanidEntity.userid.id = :userId
+                        AND ws.completed = true
+                        AND eis.completed = true
+                        GROUP BY ws.sessionDate
+                        ORDER BY ws.sessionDate ASC
+                        """)
+
+        List<Object[]> findWeightHistoryByExerciseAndUser(
+                        @Param("exerciseName") String exerciseName,
+                        @Param("userId") Long userId);
 }

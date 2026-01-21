@@ -1,6 +1,7 @@
 package com.fitnesstrackerbackend.domain.session;
 
 import com.fitnesstrackerbackend.core.security.AppUserDetails;
+import com.fitnesstrackerbackend.domain.session.dto.ExerciseProgressDto;
 import com.fitnesstrackerbackend.domain.session.dto.WorkoutSessionCreateDto;
 import com.fitnesstrackerbackend.domain.session.dto.WorkoutSessionDto;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,13 @@ public class WorkoutSessionController {
     public ResponseEntity<java.util.List<WorkoutSessionDto>> getSessionHistory(
             @AuthenticationPrincipal AppUserDetails userDetails) {
         return ResponseEntity.ok(workoutSessionService.getSessionHistory(userDetails.getId()));
+    }
+
+    @GetMapping("/progress/{exerciseName}")
+    public ResponseEntity<java.util.List<ExerciseProgressDto>> getExerciseProgress(
+            @AuthenticationPrincipal AppUserDetails userDetails,
+            @PathVariable String exerciseName) {
+        return ResponseEntity.ok(workoutSessionService.getExerciseProgress(userDetails.getId(), exerciseName));
     }
 
     @PostMapping

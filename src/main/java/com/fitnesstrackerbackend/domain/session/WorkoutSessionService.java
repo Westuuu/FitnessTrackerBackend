@@ -1,6 +1,7 @@
 package com.fitnesstrackerbackend.domain.session;
 
 import com.fitnesstrackerbackend.domain.session.dto.ExerciseInstanceDto;
+import com.fitnesstrackerbackend.domain.session.dto.ExerciseProgressDto;
 import com.fitnesstrackerbackend.domain.session.dto.ExerciseSetDto;
 import com.fitnesstrackerbackend.domain.session.dto.WorkoutSessionDto;
 import com.fitnesstrackerbackend.domain.session.model.ExerciseInstanceEntity;
@@ -250,5 +251,13 @@ public class WorkoutSessionService {
         return workoutSessionRepository.findByUserTrainingPlanidEntity_Userid_IdOrderBySessionDateDesc(userId).stream()
                 .map(this::mapToDto)
                 .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ExerciseProgressDto> getExerciseProgress(Long userId, String exerciseName) {
+        List<Object[]> results = exerciseInstanceSetRepository.findWeightHistoryByExerciseAndUser(exerciseName, userId);
+        return results.stream()
+                .map(res -> new ExerciseProgressDto((LocalDate) res[0], (java.math.BigDecimal) res[1]))
+                .collect(Collectors.toList());
     }
 }

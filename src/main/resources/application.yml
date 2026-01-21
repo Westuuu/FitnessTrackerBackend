@@ -19,7 +19,7 @@ spring:
       flyway_trainer_password: ${POSTGRES_PASSWORD_TRAINER}
       flyway_trainee_password: ${POSTGRES_PASSWORD_TRAINEE}
       flyway_auth_password: ${POSTGRES_PASSWORD_AUTH_ROLE}
-    validate-on-migrate: false
+    validate-on-migrate: true
     schemas: fitnesstracker
     default-schema: fitnesstracker
 

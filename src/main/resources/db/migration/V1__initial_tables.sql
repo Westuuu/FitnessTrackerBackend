@@ -20,7 +20,7 @@ CREATE TABLE workout_session (
 
 CREATE TABLE exercise_template (
                                    ID               BIGSERIAL NOT NULL,
-                                   name             varchar(255) NOT NULL,
+                                   name             varchar(255) NOT NULL UNIQUE,
                                    description      text,
                                    muscle_group     varchar(50) NOT NULL CHECK(muscle_group IN ('CHEST', 'BACK', 'LEGS', 'SHOULDERS', 'ARMS', 'CORE', 'FULL_BODY')),
                                    equipment_needed varchar(255),
@@ -42,6 +42,7 @@ CREATE TABLE goal (
                       title               varchar(255) NOT NULL,
                       description         text,
                       target_value        numeric(10, 2) NOT NULL CHECK(target_value > 0),
+                      current_value       numeric(10, 2) DEFAULT 0 NOT NULL,
                       start_date          date DEFAULT CURRENT_DATE NOT NULL,
                       target_date         date NOT NULL,
                       status              varchar(20) NOT NULL CHECK(status IN ('IN_PROGRESS', 'ACHIEVED', 'ABANDONED')),
@@ -85,7 +86,7 @@ CREATE TABLE workout_template_exercise (
                                            order_in_workout    int4 NOT NULL,
                                            planned_sets        int4 NOT NULL CHECK(planned_sets > 0),
                                            planned_reps        int4 NOT NULL CHECK(planned_reps > 0),
-                                           planned_weight      numeric(6, 2) NOT NULL CHECK(planned_weight > 0),
+                                           planned_weight      numeric(6, 2) NOT NULL CHECK(planned_weight >= 0),
                                            notes               text,
                                            PRIMARY KEY (ID),
                                            CONSTRAINT workout_template_exercise_unique_order

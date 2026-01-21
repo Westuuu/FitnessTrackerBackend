@@ -1,2 +1,0 @@
-ALTER TABLE fitnesstracker.workout_template_exercise DROP CONSTRAINT workout_template_exercise_planned_weight_check;
-ALTER TABLE fitnesstracker.workout_template_exercise ADD CONSTRAINT workout_template_exercise_planned_weight_check CHECK (planned_weight >= 0);

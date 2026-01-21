@@ -1,13 +1,15 @@
 package com.fitnesstrackerbackend.domain.trainingplan;
 
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanDto;
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanSummaryDto;
-import com.fitnesstrackerbackend.domain.trainingplan.model.TrainingPlanEntity;
+import com.fitnesstrackerbackend.domain.trainingplan.dto.*;
+import com.fitnesstrackerbackend.domain.trainingplan.model.*;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.time.Instant;
 
 @Component
 public class TrainingPlanMapper {
-        protected TrainingPlanSummaryDto mapToSummaryDto(TrainingPlanEntity trainingPlan) {
+        public TrainingPlanSummaryDto mapToSummaryDto(TrainingPlanEntity trainingPlan) {
                 return TrainingPlanSummaryDto.builder()
                                 .id(trainingPlan.getId())
                                 .name(trainingPlan.getName())
@@ -20,7 +22,7 @@ public class TrainingPlanMapper {
                                 .build();
         }
 
-        protected TrainingPlanDto mapToDto(TrainingPlanEntity trainingPlan) {
+        public TrainingPlanDto mapToDto(TrainingPlanEntity trainingPlan) {
                 return TrainingPlanDto.builder()
                                 .id(trainingPlan.getId())
                                 .name(trainingPlan.getName())
@@ -36,9 +38,8 @@ public class TrainingPlanMapper {
                                 .build();
         }
 
-        protected com.fitnesstrackerbackend.domain.trainingplan.dto.WorkoutDayDto mapToDayDto(
-                        com.fitnesstrackerbackend.domain.trainingplan.model.WorkoutTemplateDayEntity day) {
-                return new com.fitnesstrackerbackend.domain.trainingplan.dto.WorkoutDayDto(
+        public WorkoutDayDto mapToDayDto(WorkoutTemplateDayEntity day) {
+                return new WorkoutDayDto(
                                 day.getName(),
                                 day.getDayOfWeek(),
                                 day.getNotes(),
@@ -47,9 +48,8 @@ public class TrainingPlanMapper {
                                                 : java.util.Collections.emptyList());
         }
 
-        protected com.fitnesstrackerbackend.domain.trainingplan.dto.WorkoutExerciseDto mapToExerciseDto(
-                        com.fitnesstrackerbackend.domain.trainingplan.model.WorkoutTemplateExerciseEntity ex) {
-                return new com.fitnesstrackerbackend.domain.trainingplan.dto.WorkoutExerciseDto(
+        public WorkoutExerciseDto mapToExerciseDto(WorkoutTemplateExerciseEntity ex) {
+                return new WorkoutExerciseDto(
                                 ex.getExerciseTemplateidEntity().getId(),
                                 ex.getExerciseTemplateidEntity().getName(),
                                 ex.getOrderInWorkout(),
@@ -59,15 +59,36 @@ public class TrainingPlanMapper {
                                 ex.getNotes());
         }
 
-        protected com.fitnesstrackerbackend.domain.trainingplan.dto.UserTrainingPlanDto mapToUserPlanDto(
-                        com.fitnesstrackerbackend.domain.trainingplan.model.UserTrainingPlanEntity userPlan) {
-                return com.fitnesstrackerbackend.domain.trainingplan.dto.UserTrainingPlanDto.builder()
+        public UserTrainingPlanDto mapToUserPlanDto(UserTrainingPlanEntity userPlan) {
+                return UserTrainingPlanDto.builder()
                                 .id(userPlan.getId())
                                 .plan(mapToDto(userPlan.getTrainingPlanidEntity()))
                                 .startDate(userPlan.getStartDate())
                                 .endDate(userPlan.getEndDate())
                                 .status(userPlan.getStatus())
                                 .planTitle(userPlan.getPlanTitle())
+                                .build();
+        }
+
+        public ExerciseTemplateDto mapToExerciseTemplateDto(ExerciseTemplateEntity exerciseTemplate) {
+                return ExerciseTemplateDto.builder()
+                                .id(exerciseTemplate.getId())
+                                .name(exerciseTemplate.getName())
+                                .description(exerciseTemplate.getDescription())
+                                .instructions(exerciseTemplate.getInstructions())
+                                .equipmentNeeded(exerciseTemplate.getEquipmentNeeded())
+                                .muscleGroup(exerciseTemplate.getMuscleGroup())
+                                .build();
+        }
+
+        public ExerciseTemplateEntity mapToExerciseEntity(ExerciseTemplateCreationDto templateCreationDto) {
+                return ExerciseTemplateEntity.builder()
+                                .equipmentNeeded(templateCreationDto.equipmentNeeded())
+                                .instructions(templateCreationDto.instructions())
+                                .name(templateCreationDto.name())
+                                .muscleGroup(templateCreationDto.muscleGroup())
+                                .description(templateCreationDto.description())
+                                .createdAt(Instant.now())
                                 .build();
         }
 }

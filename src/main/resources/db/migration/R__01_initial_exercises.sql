@@ -71,21 +71,21 @@ ON CONFLICT (name) DO NOTHING;
 -- Initial Gyms in Different Cities
 INSERT INTO gym (name, email)
 VALUES
-('Cracow Titan Gym', 'contact@cracowtitan.pl'),
-('Wroclaw Power House', 'info@wroclawpower.pl'),
-('Gdansk Seaside Fitness', 'gdansk@fitness.pl'),
-('Warsaw Central Gym', 'warsaw@gym.pl')
+('Chicago Titan Gym', 'contact@chicagotitan.com'),
+('Miami Power House', 'info@miamipower.com'),
+('Seattle Seaside Fitness', 'seattle@fitness.com'),
+('Austin Central Gym', 'austin@gym.com')
 ON CONFLICT (email) DO NOTHING;
 
 -- Addresses for New Gyms
 INSERT INTO address (gymID, country, city, street, street_number, apartment_number, post_code)
-SELECT ID, 'Poland', 'Cracow', 'Royal St', '101', '5', '30-001' FROM gym WHERE name = 'Cracow Titan Gym'
+SELECT ID, 'USA', 'Chicago', 'Michigan Ave', '101', '5', '60601' FROM gym WHERE name = 'Chicago Titan Gym'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO address (gymID, country, city, street, street_number, apartment_number, post_code)
-SELECT ID, 'Poland', 'Wroclaw', 'Power Ave', '22', '1A', '50-001' FROM gym WHERE name = 'Wroclaw Power House'
+SELECT ID, 'USA', 'Miami', 'Ocean Dr', '22', '1A', '33139' FROM gym WHERE name = 'Miami Power House'
 ON CONFLICT DO NOTHING;
 
 INSERT INTO address (gymID, country, city, street, street_number, apartment_number, post_code)
-SELECT ID, 'Poland', 'Gdansk', 'Sea Rd', '5', '12', '80-001' FROM gym WHERE name = 'Gdansk Seaside Fitness'
+SELECT ID, 'USA', 'Seattle', 'Lake Way', '5', '12', '98101' FROM gym WHERE name = 'Seattle Seaside Fitness'
 ON CONFLICT DO NOTHING;

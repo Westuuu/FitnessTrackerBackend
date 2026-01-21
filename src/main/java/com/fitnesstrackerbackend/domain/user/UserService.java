@@ -2,19 +2,11 @@ package com.fitnesstrackerbackend.domain.user;
 
 import com.fitnesstrackerbackend.core.exception.ResourceNotFoundException;
 import com.fitnesstrackerbackend.domain.auth.LoginCredentialRepository;
-import com.fitnesstrackerbackend.domain.user.dto.GymUserDto;
-import com.fitnesstrackerbackend.domain.user.dto.TraineeOverviewDto;
-import com.fitnesstrackerbackend.domain.user.dto.TrainerAssigmentResponseDto;
-import com.fitnesstrackerbackend.domain.user.dto.UserProfileDto;
-import com.fitnesstrackerbackend.domain.user.model.MembershipEntity;
-import com.fitnesstrackerbackend.domain.user.model.TraineeInfoEntity;
-import com.fitnesstrackerbackend.domain.user.model.UserEntity;
-import com.fitnesstrackerbackend.domain.user.model.UserType;
-import com.fitnesstrackerbackend.domain.user.repository.MembershipRepository;
-import com.fitnesstrackerbackend.domain.user.repository.TraineeInfoRepository;
-import com.fitnesstrackerbackend.domain.user.repository.TrainerTraineeViewRepository;
-import com.fitnesstrackerbackend.domain.user.repository.UserRepository;
+import com.fitnesstrackerbackend.domain.user.dto.*;
+import com.fitnesstrackerbackend.domain.user.model.*;
+import com.fitnesstrackerbackend.domain.user.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -33,6 +27,7 @@ public class UserService {
     private final TraineeInfoRepository traineeInfoRepository;
     private final MembershipRepository membershipRepository;
     private final LoginCredentialRepository loginCredentialRepository;
+    private final BodyMetricRepository bodyMetricRepository;
 
     @Transactional(readOnly = true)
     public UserProfileDto getUserProfile(Long userID) {
@@ -146,5 +141,46 @@ public class UserService {
 
         membership.setMembershipStatus("ACTIVE");
         membershipRepository.save(membership);
+    }
+
+    // Body Metric related methods
+    @Transactional(readOnly = true)
+    public List<BodyMetricDto> getBodyMetricsByUserId(Long userId) {
+        return bodyMetricRepository.findById_UseridOrderById_DateAsc(userId).stream()
+                .map(entity -> new BodyMetricDto(
+                        entity.getId().getDate(),
+                        entity.getWeight(),
+                        entity.getHeight()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public BodyMetricDto saveMetric(Long userId, BodyMetricDto dto) {
+        log.info("Saving body metric for userId={}, weight={}, height={}, date={}",
+                userId, dto.weight(), dto.height(), dto.date());
+
+        TraineeInfoEntity trainee = traineeInfoRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Trainee not found for userId: " + userId));
+
+        BodyMetricIdEntity id = new BodyMetricIdEntity();
+        id.setUserid(userId);
+        id.setDate(dto.date() != null ? dto.date() : LocalDate.now());
+
+        BodyMetricEntity entity = bodyMetricRepository.findById(id)
+                .orElse(new BodyMetricEntity());
+
+        entity.setId(id);
+        entity.setUserid(trainee);
+        entity.setWeight(dto.weight());
+        entity.setHeight(dto.height());
+
+        BodyMetricEntity saved = bodyMetricRepository.save(entity);
+        log.info("Successfully saved body metric with id={}, date={}", saved.getId().getUserid(),
+                saved.getId().getDate());
+
+        return new BodyMetricDto(
+                saved.getId().getDate(),
+                saved.getWeight(),
+                saved.getHeight());
     }
 }

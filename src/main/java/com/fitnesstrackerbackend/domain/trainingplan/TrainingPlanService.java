@@ -1,8 +1,6 @@
 package com.fitnesstrackerbackend.domain.trainingplan;
 
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanCreateDto;
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanDto;
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanSummaryDto;
+import com.fitnesstrackerbackend.domain.trainingplan.dto.*;
 import com.fitnesstrackerbackend.domain.trainingplan.enums.VisibilityType;
 import com.fitnesstrackerbackend.domain.trainingplan.exceptions.TrainingPlanNotFoundException;
 import com.fitnesstrackerbackend.domain.trainingplan.model.*;
@@ -12,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -143,5 +140,20 @@ public class TrainingPlanService {
                 .orElseThrow(() -> new TrainingPlanNotFoundException(trainingPlanId));
 
         return trainingPlanMapper.mapToDto(trainingPlan);
+    }
+
+    // Exercise related methods
+    @Transactional(readOnly = true)
+    public List<ExerciseTemplateDto> getExerciseTemplates() {
+        return exerciseRepository.findAll().stream()
+                .map(trainingPlanMapper::mapToExerciseTemplateDto)
+                .toList();
+    }
+
+    @Transactional
+    public ExerciseTemplateDto createExerciseTemplate(ExerciseTemplateCreationDto exerciseTemplateCreationDto) {
+        ExerciseTemplateEntity exerciseTemplate = trainingPlanMapper.mapToExerciseEntity(exerciseTemplateCreationDto);
+        ExerciseTemplateEntity savedExerciseTemplate = exerciseRepository.save(exerciseTemplate);
+        return trainingPlanMapper.mapToExerciseTemplateDto(savedExerciseTemplate);
     }
 }

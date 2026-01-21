@@ -5,7 +5,7 @@ ON CONFLICT (email) DO NOTHING;
 
 -- Insert Address for Main Gym
 INSERT INTO address (gymID, country, city, street, street_number, apartment_number, post_code)
-SELECT ID, 'Poland', 'Warsaw', 'Main St', '10', '1', '00-001' FROM gym WHERE name = 'Main Gym'
+SELECT ID, 'USA', 'New York', 'Broadway', '10', '1', '10001' FROM gym WHERE name = 'Main Gym'
 ON CONFLICT DO NOTHING;
 
 -- Insert Users

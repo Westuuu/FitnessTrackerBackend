@@ -1,11 +1,9 @@
 package com.fitnesstrackerbackend.domain.trainingplan;
 
 import com.fitnesstrackerbackend.core.security.AppUserDetails;
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanDto;
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanCreateDto;
-import com.fitnesstrackerbackend.domain.trainingplan.dto.TrainingPlanSummaryDto;
-import com.fitnesstrackerbackend.domain.trainingplan.dto.UserTrainingPlanDto;
+import com.fitnesstrackerbackend.domain.trainingplan.dto.*;
 import com.fitnesstrackerbackend.domain.trainingplan.enums.VisibilityType;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/training-plans")
+@RequestMapping("/api")
 public class TrainingPlanController {
 
     private final TrainingPlanService trainingPlanService;
@@ -23,7 +21,7 @@ public class TrainingPlanController {
         this.trainingPlanService = trainingPlanService;
     }
 
-    @PostMapping
+    @PostMapping("/training-plans")
     public ResponseEntity<TrainingPlanDto> createTrainingPlan(
             @AuthenticationPrincipal AppUserDetails userDetails,
             @RequestBody TrainingPlanCreateDto createDto) {
@@ -31,20 +29,20 @@ public class TrainingPlanController {
                 .body(trainingPlanService.createTrainingPlan(userDetails.getId(), createDto));
     }
 
-    @GetMapping("/my")
+    @GetMapping("/training-plans/my")
     public ResponseEntity<List<UserTrainingPlanDto>> getMyTrainingPlans(
             @AuthenticationPrincipal AppUserDetails userDetails) {
         return ResponseEntity.ok(trainingPlanService.getMyTrainingPlans(userDetails.getId()));
     }
 
-    @GetMapping("/created")
+    @GetMapping("/training-plans/created")
     @org.springframework.security.access.prepost.PreAuthorize("hasRole('TRAINER')")
     public ResponseEntity<List<TrainingPlanDto>> getCreatedPlans(
             @AuthenticationPrincipal AppUserDetails userDetails) {
         return ResponseEntity.ok(trainingPlanService.getCreatedPlans(userDetails.getId()));
     }
 
-    @PostMapping("/{trainingPlanId}/assign")
+    @PostMapping("/training-plans/{trainingPlanId}/assign")
     public ResponseEntity<UserTrainingPlanDto> assignPlanToUser(
             @PathVariable Long trainingPlanId,
             @AuthenticationPrincipal AppUserDetails userDetails) {
@@ -52,7 +50,7 @@ public class TrainingPlanController {
                 .body(trainingPlanService.assignPlanToUser(userDetails.getId(), trainingPlanId));
     }
 
-    @PostMapping("/{trainingPlanId}/assign/{userId}")
+    @PostMapping("/training-plans/{trainingPlanId}/assign/{userId}")
     @org.springframework.security.access.prepost.PreAuthorize("hasRole('TRAINER')")
     public ResponseEntity<UserTrainingPlanDto> assignPlanToTrainee(
             @PathVariable Long trainingPlanId,
@@ -62,7 +60,7 @@ public class TrainingPlanController {
                 .body(trainingPlanService.assignTrainerPlanToTrainee(userDetails.getId(), userId, trainingPlanId));
     }
 
-    @GetMapping
+    @GetMapping("/training-plans")
     public ResponseEntity<List<TrainingPlanSummaryDto>> getAllTrainingPlans(
             @RequestParam(required = false) VisibilityType visibilityType,
             @AuthenticationPrincipal AppUserDetails userDetails) {
@@ -71,10 +69,25 @@ public class TrainingPlanController {
         return ResponseEntity.ok(plans);
     }
 
-    @GetMapping("/{trainingPlanId}")
+    @GetMapping("/training-plans/{trainingPlanId}")
     public ResponseEntity<TrainingPlanDto> getTrainingPlanById(
             @PathVariable Long trainingPlanId,
             @AuthenticationPrincipal AppUserDetails userDetails) {
         return ResponseEntity.ok(trainingPlanService.getTrainingPlanById(trainingPlanId, userDetails.getId()));
+    }
+
+    // Exercise related endpoints
+    @GetMapping("/exercises")
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('TRAINEE', 'TRAINER')")
+    public ResponseEntity<List<ExerciseTemplateDto>> getExerciseTemplates() {
+        return ResponseEntity.ok(trainingPlanService.getExerciseTemplates());
+    }
+
+    @PostMapping("/exercises")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('TRAINER')")
+    public ResponseEntity<ExerciseTemplateDto> createExerciseTemplate(
+            @RequestBody @Valid ExerciseTemplateCreationDto exerciseTemplateCreationDto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(trainingPlanService.createExerciseTemplate(exerciseTemplateCreationDto));
     }
 }

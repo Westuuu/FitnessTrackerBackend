@@ -1,0 +1,9 @@
+a366bff ComprexEu Migration to Spring Boot with PostgreSQL and Flyway
+d94ae27 Adam Mikołajczyk #8 - Entities + first endpoints
+e124fef Adam Mikołajczyk #7 - flyway migration files
+5840196 Adam Mikołajczyk #6 - /login and /register endpoints implementation WIP
+500c7e8 Adam Mikołajczyk #5 - implementation of JWT authentication
+dfcdc9b Adam Mikołajczyk #4 - Database connection implementation
+fdbe617 Adam Mikołajczyk #3 - user domain implementation WIP
+1696ecb Adam Mikołajczyk #2 - user model implementation
+d6bcf5d Adam Mikołajczyk #1 - initial commit

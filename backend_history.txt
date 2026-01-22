@@ -1,0 +1,27 @@
+20fd19b ComprexEu Database reset and seed data consolidation
+557697f ComprexEu Cleanup and training plan refactor
+1083ca2 ComprexEu fix: enhance session and metric processing and sync global exception handling
+51bdd7f Adam Mikołajczyk global handler revert
+6a77be5 ComprexEu Fix trainer creation 500 error (V11 migration, defensive logic), add global exception handling, and overhaul trainer registration
+8c2da0e ComprexEu finished trainer dashboard
+cbf7e72 ComprexEu feat: improve admin and trainer dashboards
+4ab9423 ComprexEu fix: progress and overview for trainee dashboard back-end data and exceptions
+0496505 ComprexEu fix: implement automatic goal progress tracking from workout sessions
+6bbaebd ComprexEu fix: optimize training plan data loading, fix trainee plan creation permissions, and relax weight constraints
+ac89047 Adam Mikołajczyk goal endpoint fix
+91ba2ed Adam Mikołajczyk .env integration
+b2fc2e9 ComprexEu fix(gym): resolve mapper crashes and improve null safety
+0a184f0 ComprexEu feat(gym): implement gym selection and admin approval flow with security logic
+27a6f20 Adam Mikołajczyk #13 - Training plan + exercise endpoints
+c6486fb Adam Mikołajczyk #12 - Trainer assignment endpoint
+1216aef Adam Mikołajczyk #11 - Entity changes and additional endpoints
+e759706 Adam Mikołajczyk #10 - New DB role for not logged in users
+95bfabb Adam Mikołajczyk #9 - Entity changes to match DB schema,
+d94ae27 Adam Mikołajczyk #8 - Entities + first endpoints
+e124fef Adam Mikołajczyk #7 - flyway migration files
+5840196 Adam Mikołajczyk #6 - /login and /register endpoints implementation WIP
+500c7e8 Adam Mikołajczyk #5 - implementation of JWT authentication
+dfcdc9b Adam Mikołajczyk #4 - Database connection implementation
+fdbe617 Adam Mikołajczyk #3 - user domain implementation WIP
+1696ecb Adam Mikołajczyk #2 - user model implementation
+d6bcf5d Adam Mikołajczyk #1 - initial commit
